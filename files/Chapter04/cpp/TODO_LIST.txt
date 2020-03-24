@@ -1,5 +1,3 @@
-Create files
-
 Add drogon HTTP lib
 
 Add MySQL database lib
