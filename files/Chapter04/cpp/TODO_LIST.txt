@@ -1,0 +1,10 @@
+Set up bash scripts
+
+Create files
+
+Add jaeger + opentracing
+
+Add drogon HTTP lib
+
+Add MySQL database lib
+
