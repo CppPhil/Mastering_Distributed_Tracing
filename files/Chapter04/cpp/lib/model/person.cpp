@@ -6,18 +6,15 @@ namespace lib::model {
 Person::Person(std::string name, std::string title, std::string description)
   : name_(std::move(name)),
     title_(std::move(title)),
-    description_(std::move(description))
-{
+    description_(std::move(description)) {
   // nop
 }
 
-const std::string& Person::name() const noexcept
-{
+const std::string& Person::name() const noexcept {
   return name_;
 }
 
-const std::string& Person::title() const noexcept
-{
+const std::string& Person::title() const noexcept {
   return title_;
 }
 

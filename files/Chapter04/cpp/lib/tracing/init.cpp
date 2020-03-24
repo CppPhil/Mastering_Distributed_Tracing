@@ -3,8 +3,9 @@
 #include "tracing/init.hpp"
 
 namespace lib::tracing {
-void init(const std::string& service)
-{
-  fprintf(stderr, "DUMMY IMPLEMENTATION\nlib::tracing::init called with: \"%s\"\n", service.c_str());
+void init(const std::string& service) {
+  fprintf(stderr,
+          "DUMMY IMPLEMENTATION\nlib::tracing::init called with: \"%s\"\n",
+          service.c_str());
 }
 } // namespace lib::tracing

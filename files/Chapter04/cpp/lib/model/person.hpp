@@ -2,8 +2,7 @@
 #include <string>
 
 namespace lib::model {
-class person
-{
+class person {
 public:
   Person(std::string name, std::string title, std::string description);
 
