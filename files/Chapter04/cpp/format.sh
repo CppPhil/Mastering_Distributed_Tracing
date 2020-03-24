@@ -5,11 +5,6 @@
 # Directory containing this bash script.
 readonly DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-# Directories
-readonly SRC_DIR=$DIR/src
-readonly INCLUDE_DIR=$DIR/include
-
-# files
 readonly DOT_CLANG_FORMAT=$DIR/.clang-format
 
 delete_file_if_exists () {
@@ -26,12 +21,18 @@ format () {
     rm -f ./.clang-format
 }
 
+readonly PREV_DIR=$(pwd)
+
+cd $DIR
+
 delete_file_if_exists $DOT_CLANG_FORMAT
 
 wget --quiet https://raw.githubusercontent.com/actor-framework/actor-framework/master/.clang-format
 
 # Format the source files.
-format $SRC_DIR
-format $INCLUDE_DIR
+format $DIR/exercise1
+format $DIR/lib
+
+cd $PREV_DIR
 
 exit 0
