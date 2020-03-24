@@ -4,7 +4,7 @@
 namespace lib::model {
 class person {
 public:
-  Person(std::string name, std::string title, std::string description);
+  person(std::string name, std::string title, std::string description);
 
   const std::string& name() const noexcept;
 

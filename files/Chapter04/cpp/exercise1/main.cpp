@@ -1,4 +1,4 @@
-#include "lib/tracing/init.hpp"
+#include "tracing/init.hpp"
 
 int main(int argc, char* argv[]) {
   (void) argc;
