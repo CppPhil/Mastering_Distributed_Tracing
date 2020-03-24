@@ -25,46 +25,6 @@ set(BUILD_TESTING false)
 set(JAEGERTRACING_BUILD_EXAMPLES false)
 add_subdirectory(external/jaeger-client-cpp)
 
-### OBJECT LIBRARY
-set(LIB_NAME Chapter04_project_Lib)
-
-set(LIB_HEADERS
-    )
-   
-set(LIB_SOURCES
-    )
-   
-add_library(
-    ${LIB_NAME}
-    OBJECT
-    ${LIB_HEADERS}
-    ${LIB_SOURCES}
-)
-
-target_link_libraries(
-    ${LIB_NAME}
-    PUBLIC
-    Threads::Threads
-    jaegertracing
-)
-
-target_include_directories(
-    ${LIB_NAME}
-    PUBLIC
-    ${Chapter04_project_SOURCE_DIR}/include
-)
-
-### APPLICATION
-set(APP_NAME Chapter04_project_App)
-
-add_executable(
-    ${APP_NAME}
-    src/main.cpp
-)
-
-target_link_libraries(
-    ${APP_NAME}
-    PRIVATE
-    ${LIB_NAME}
-)
+add_subdirectory(lib)
+add_subdirectory(exercise1)
 
