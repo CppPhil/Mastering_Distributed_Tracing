@@ -30,6 +30,6 @@ target_link_libraries(
 target_include_directories(
     ${LIB_NAME}
     PUBLIC
-    ${cpp_lib_SOURCE_DIR}
+    ${cpp_lib_project_SOURCE_DIR}
 )
 
