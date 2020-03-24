@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-namespace lib::model {
+namespace model {
 class person {
 public:
   person(std::string name, std::string title, std::string description);
@@ -17,4 +17,4 @@ private:
   std::string title_;
   std::string description_;
 };
-} // namespace lib::model
+} // namespace model

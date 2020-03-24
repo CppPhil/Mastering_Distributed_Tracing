@@ -2,7 +2,7 @@
 
 #include "model/person.hpp"
 
-namespace lib::model {
+namespace model {
 person::person(std::string name, std::string title, std::string description)
   : name_(std::move(name)),
     title_(std::move(title)),
@@ -21,4 +21,4 @@ const std::string& person::title() const noexcept {
 const std::string& person::description() const noexcept {
   return description_;
 }
-} // namespace lib::model
+} // namespace model
