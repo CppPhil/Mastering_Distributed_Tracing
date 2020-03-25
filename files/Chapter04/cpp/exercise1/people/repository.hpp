@@ -1,5 +1,5 @@
 #pragma once
-#include <string_view>
+#include <string>
 
 #include <Poco/Data/MySQL/Connector.h>
 #include <Poco/Data/Session.h>
@@ -17,7 +17,7 @@ public:
 
   ~repository();
 
-  model::person get_person(std::string_view name) const;
+  model::person get_person(std::string name) const;
 
 private:
   Poco::Data::MySQL::Connector connector_;

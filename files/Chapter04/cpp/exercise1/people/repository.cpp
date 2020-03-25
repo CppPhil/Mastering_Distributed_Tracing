@@ -1,4 +1,3 @@
-#include <string>
 #include <tuple>
 #include <vector>
 
@@ -12,41 +11,22 @@ const std::string conn_info
 
 repository::repository()
   : connector_(), session_(connector_.createSession(conn_info)) {
+  // nop
 }
 
 repository::~repository() = default;
 
-model::person repository::get_person(std::string_view name) const {
-  /*
-constexpr std::string_view query
-  = "select title, description from people where name = ?";
-
-const drogon::orm::Result result
-  = db_client_->execSqlSync(std::string(query.begin(), query.end()),
-                            std::string(name.begin(), name.end()));
-
-for (const drogon::orm::Row& row : result) {
-  const drogon::orm::Field title = row["title"];
-  const drogon::orm::Field description = row["description"];
-
-  return model::person(std::string(name.begin(), name.end()), title.c_str(),
-                       description.c_str());
-}
-
-return model::person(std::string(name.begin(), name.end()), "", "");
-*/
-
+model::person repository::get_person(std::string name) const {
   using namespace Poco::Data::Keywords;
 
   std::vector<std::tuple<std::string, std::string>> v;
   Poco::Data::Statement select(session_);
   select << "select title, description from people where name = ?", into(v),
-    use(std::string(name.begin(), name.end())), now;
+    use(name), now;
 
-  for (const auto& [title, descr] : v) {
-    return model::person(std::string(name.begin(), name.end()), title, descr);
-  }
+  for (const auto& [title, descr] : v)
+    return model::person(name, title, descr);
 
-  return model::person(std::string(name.begin(), name.end()), "", "");
+  return model::person(name, "", "");
 }
 } // namespace e1::people

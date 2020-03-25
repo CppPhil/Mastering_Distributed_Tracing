@@ -27,6 +27,6 @@ target_link_libraries(
     PRIVATE
     cpp_lib
     Poco::Foundation
-    Poco::Data
+    Poco::DataMySQL
 )
 
