@@ -1,6 +1,9 @@
 #pragma once
 #include <string_view>
 
+#include <Poco/Data/MySQL/Connector.h>
+#include <Poco/Data/Session.h>
+
 #include "model/person.hpp"
 
 namespace e1::people {
@@ -17,6 +20,7 @@ public:
   model::person get_person(std::string_view name) const;
 
 private:
-  // drogon::orm::DbClientPtr db_client_;
+  Poco::Data::MySQL::Connector connector_;
+  mutable Poco::Data::Session session_;
 };
 } // namespace e1::people
