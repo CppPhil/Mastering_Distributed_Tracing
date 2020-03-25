@@ -11,7 +11,7 @@ HunterGate(
 
 project(Chapter04_project VERSION 1.0.0)
 
-string(APPEND CMAKE_CXX_FLAGS " -Werror -Wall -Wextra -Wcast-align -Wcast-qual -Wmissing-field-initializers -Wmissing-include-dirs -Wpointer-arith -Wstack-protector -Wstrict-aliasing=2 -Wunreachable-code -Wlogical-op -Wduplicated-cond -Wnull-dereference -Wno-unused-parameter")
+string(APPEND CMAKE_CXX_FLAGS " -Werror -Wall -Wextra -Wcast-align -Wmissing-include-dirs -Wpointer-arith -Wstack-protector -Wstrict-aliasing=2 -Wunreachable-code -Wlogical-op -Wduplicated-cond -Wnull-dereference -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-sign-compare -Wno-reorder -Wno-missing-field-initializers -Wno-type-limits")
 string(APPEND CMAKE_CXX_FLAGS_DEBUG " -g -O0")
 string(APPEND CMAKE_CXX_FLAGS_RELEASE " -O3 -march=native -funroll-loops -flto -fwhole-program -DNDEBUG")
 
@@ -24,6 +24,8 @@ find_package(Threads REQUIRED)
 set(BUILD_TESTING false)
 set(JAEGERTRACING_BUILD_EXAMPLES false)
 add_subdirectory(external/jaeger-client-cpp)
+
+add_subdirectory(external/drogon)
 
 add_subdirectory(lib)
 add_subdirectory(exercise1)

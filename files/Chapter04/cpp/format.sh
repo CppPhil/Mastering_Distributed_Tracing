@@ -25,10 +25,6 @@ readonly PREV_DIR=$(pwd)
 
 cd $DIR
 
-delete_file_if_exists $DOT_CLANG_FORMAT
-
-wget --quiet https://raw.githubusercontent.com/actor-framework/actor-framework/master/.clang-format
-
 # Format the source files.
 format $DIR/exercise1
 format $DIR/lib

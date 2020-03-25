@@ -25,6 +25,7 @@ target_link_libraries(
     PUBLIC
     Threads::Threads
     jaegertracing
+    drogon
 )
 
 target_include_directories(
