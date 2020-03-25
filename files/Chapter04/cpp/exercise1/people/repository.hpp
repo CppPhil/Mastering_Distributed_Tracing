@@ -1,8 +1,6 @@
 #pragma once
 #include <string_view>
 
-#include <drogon/orm/DbClient.h>
-
 #include "model/person.hpp"
 
 namespace e1::people {
@@ -19,6 +17,6 @@ public:
   model::person get_person(std::string_view name) const;
 
 private:
-  drogon::orm::DbClientPtr db_client_;
+  // drogon::orm::DbClientPtr db_client_;
 };
 } // namespace e1::people

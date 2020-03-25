@@ -3,7 +3,7 @@
 
 namespace e1 {
 void entry_point() {
-  const people::repository repo();
+  // const people::repository repo();
 
   // TODO: test DB
 

@@ -1,11 +1,6 @@
-#include <drogon/orm/Field.h>
-#include <drogon/orm/Result.h>
-#include <drogon/orm/ResultIterator.h>
-#include <drogon/orm/Row.h>
-#include <drogon/orm/SqlBinder.h>
-
 #include "repository.hpp"
 
+#if 0
 namespace e1::people {
 constexpr std::string_view conn_info
   = "host=127.0.0.1 port=3306 dbname=chapter04 user=root password=mysqlpwd";
@@ -37,3 +32,4 @@ model::person repository::get_person(std::string_view name) const {
   return model::person(std::string(name.begin(), name.end()), "", "");
 }
 } // namespace e1::people
+#endif /* 0 */

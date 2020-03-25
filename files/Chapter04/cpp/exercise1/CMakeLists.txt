@@ -26,5 +26,7 @@ target_link_libraries(
     ${APP_NAME}
     PRIVATE
     cpp_lib
+    Poco::Foundation
+    Poco::Data
 )
 

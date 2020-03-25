@@ -26,6 +26,7 @@ set(JAEGERTRACING_BUILD_EXAMPLES false)
 add_subdirectory(external/jaeger-client-cpp)
 
 add_subdirectory(external/drogon)
+add_subdirectory(external/poco)
 
 add_subdirectory(lib)
 add_subdirectory(exercise1)
