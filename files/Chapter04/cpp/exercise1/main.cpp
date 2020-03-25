@@ -1,8 +1,8 @@
+#include "hello.hpp"
 #include "tracing/init.hpp"
 
-int main(int argc, char* argv[]) {
-  (void) argc;
-  (void) argv;
-
+int main() {
   tracing::init("cpp-exercise1");
+
+  e1::entry_point();
 }
