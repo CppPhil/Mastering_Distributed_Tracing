@@ -8,7 +8,7 @@
 
 namespace e1::people {
 const std::string conn_info
-  = "host=127.0.0.1 port=3306 dbname=chapter04 user=root password=mysqlpwd";
+  = "host=127.0.0.1;port=3306;user=root;password=mysqlpwd;auto-reconnect=true;dbname=chapter04";
 
 repository::repository()
   : connector_(), session_(connector_.createSession(conn_info)) {
