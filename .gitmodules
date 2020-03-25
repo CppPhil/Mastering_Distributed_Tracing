@@ -1,3 +1,6 @@
 [submodule "files/Chapter04/cpp/external/jaeger-client-cpp"]
 	path = files/Chapter04/cpp/external/jaeger-client-cpp
 	url = https://github.com/jaegertracing/jaeger-client-cpp.git
+[submodule "files/Chapter04/cpp/external/drogon"]
+	path = files/Chapter04/cpp/external/drogon
+	url = https://github.com/an-tao/drogon.git
