@@ -27,7 +27,7 @@ model::person repository::get_person(std::string name) const {
   std::string description;
   Poco::Data::Statement select(*session_);
   select << "select title, description from people where name = ?", use(name),
-    into(title), into(description);
+    into(title), into(description), range(0, 1);
 
   while (!select.done()) {
     select.execute();
