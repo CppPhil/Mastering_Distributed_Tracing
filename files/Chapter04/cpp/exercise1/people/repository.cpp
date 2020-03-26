@@ -1,3 +1,5 @@
+#include <mutex>
+
 #include <Poco/Data/MySQL/Connector.h>
 #include <Poco/Data/Statement.h>
 
@@ -7,8 +9,11 @@ namespace e1::people {
 const std::string conn_info = "host=127.0.0.1;port=3306;user=phillip;password="
                               "mysqlpwd;auto-reconnect=true;db=chapter04";
 
+std::once_flag register_mysql_connector_once;
+
 repository::repository() : session_(std::nullopt) {
-  Poco::Data::MySQL::Connector::registerConnector();
+  std::call_once(register_mysql_connector_once,
+                 &Poco::Data::MySQL::Connector::registerConnector);
 
   session_ = Poco::Data::Session("MySQL", conn_info);
 }
