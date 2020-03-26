@@ -1,7 +1,3 @@
-#include <vector>
-
-#include <cstdio>
-
 #include <Poco/Data/Statement.h>
 
 #include "repository.hpp"
@@ -20,16 +16,15 @@ repository::~repository() = default;
 model::person repository::get_person(std::string name) const {
   using namespace Poco::Data::Keywords;
 
-  std::vector<std::string> v;
+  std::string title;
+  std::string description;
   Poco::Data::Statement select(session_);
-  select << "select title, description from people where name = ?", name,
-    into(v), now;
+  select << "select title, description from people where name = ?", use(name),
+    into(title), into(description);
 
-  for (const auto& element : v) {
-    fprintf(stderr, "ELEMENT: \"%s\"!\n", element.c_str());
-
-    // TODO: ACTUALLY PUT THE REAL TITLE AND DESCRIPTION IN THERE
-    return model::person(name, "title", "descr");
+  while (!select.done()) {
+    select.execute();
+    return model::person(name, title, description);
   }
 
   return model::person(name, "", "");
