@@ -7,7 +7,7 @@ namespace e1 {
 class say_hello_http_controller
   : public drogon::HttpController<say_hello_http_controller, false> {
 public:
-  say_hello_http_controller(people::repository& repo);
+  say_hello_http_controller(const people::repository& repo);
 
   METHOD_LIST_BEGIN
     METHOD_ADD(say_hello_http_controller::handle_say_hello, "/sayHello/{name}",
@@ -20,6 +20,6 @@ public:
     std::string&& name);
 
 private:
-  people::repository& repo_;
+  const people::repository& repo_;
 };
 } // namespace e1
