@@ -10,7 +10,7 @@ void entry_point() {
 
   drogon::app().addListener("127.0.0.1", 8080);
 
-  auto http_controller = std::make_shared<say_hello_http_controller>(repo);
+  auto http_controller = std::make_shared<say_hello_http_controller>();
   http_controller->set_repo(repo);
 
   drogon::app().registerController(http_controller);

@@ -17,8 +17,8 @@ public:
   void set_repo(const people::repository& repo);
 
   METHOD_LIST_BEGIN
-    METHOD_ADD(say_hello_http_controller::handle_say_hello, "/sayHello/{name}",
-               drogon::Get);
+    ADD_METHOD_TO(say_hello_http_controller::handle_say_hello,
+                  "/sayHello/{name}", drogon::Get);
   METHOD_LIST_END
 
   void handle_say_hello(
