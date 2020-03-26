@@ -1,29 +1,18 @@
-#include <cstdio>
-
-#include <Poco/Data/MySQL/MySQLException.h>
+#include <drogon/drogon.h>
 
 #include "hello.hpp"
+#include "say_hello_http_controller.hpp"
 #include "people/repository.hpp"
 
 namespace e1 {
 void entry_point() {
-  try {
-    fprintf(stderr, "About to create repo\n");
-    const people::repository repo;
-    fprintf(stderr, "Created repo\n");
+  const people::repository repo;
 
-    fprintf(stderr, "About to call get_person\n");
-    const model::person result_value(repo.get_person("Gru"));
-    fprintf(stderr, "Finished calling get_person\n");
+  drogon::app().addListener("127.0.0.1", 8080);
 
-    printf("Result: \"model::person{\"name\": \"%s\", \"title\": \"%s\", "
-           "\"description\": \"%s\"}\"\n",
-           result_value.name().c_str(), result_value.title().c_str(),
-           result_value.description().c_str());
+  auto http_controller = std::make_shared<say_hello_http_controller>(repo);
 
-  } catch (const Poco::Data::MySQL::MySQLException& ex) {
-    fprintf(stderr, "Caught MySQLException: %s\n", ex.what());
-  }
-  // TODO: Implement HTTP server
+  drogon::app().registerController(http_controller);
+  drogon::app().run();
 }
 } // namespace e1

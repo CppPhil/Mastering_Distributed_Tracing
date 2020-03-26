@@ -9,12 +9,14 @@ set(APP_NAME cpp_exercise1_App)
 
 set(APP_HEADERS
     hello.hpp
-    people/repository.hpp)
+    people/repository.hpp
+    say_hello_http_controller.hpp)
 
 set(APP_SOURCES
     hello.cpp
     main.cpp
-    people/repository.cpp)
+    people/repository.cpp
+    say_hello_http_controller.cpp)
 
 add_executable(
     ${APP_NAME}
