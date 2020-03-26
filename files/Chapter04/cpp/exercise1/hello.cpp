@@ -1,8 +1,8 @@
 #include <drogon/drogon.h>
 
 #include "hello.hpp"
-#include "say_hello_http_controller.hpp"
 #include "people/repository.hpp"
+#include "say_hello_http_controller.hpp"
 
 namespace e1 {
 void entry_point() {
