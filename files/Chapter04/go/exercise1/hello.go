@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"strings"
 
-  opentracing "github.com/opentracing/opentracing-go"
+	opentracing "github.com/opentracing/opentracing-go"
 
 	"github.com/PacktPublishing/Mastering-Distributed-Tracing/Chapter04/go/exercise1/people"
 
-  "github.com/PacktPublishing/Mastering-Distributed-Tracing/Chapter04/go/lib/tracing"
+	"github.com/PacktPublishing/Mastering-Distributed-Tracing/Chapter04/go/lib/tracing"
 )
 
 var repo *people.Repository
@@ -19,9 +19,9 @@ func main() {
 	repo = people.NewRepository()
 	defer repo.Close()
 
-  tr, closer := tracing.Init("go-2-hello")
-  defer closer.Close()
-  tracer = tr
+	tr, closer := tracing.Init("go-2-hello")
+	defer closer.Close()
+	tracer = tr
 
 	http.HandleFunc("/sayHello/", handleSayHello)
 
@@ -30,6 +30,9 @@ func main() {
 }
 
 func handleSayHello(w http.ResponseWriter, r *http.Request) {
+	span := tracer.StartSpan("say-hello")
+	defer span.Finish()
+
 	name := strings.TrimPrefix(r.URL.Path, "/sayHello/")
 	greeting, err := SayHello(name)
 	if err != nil {
