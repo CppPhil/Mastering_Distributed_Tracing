@@ -1,7 +1,7 @@
 #pragma once
+#include <optional>
 #include <string>
 
-#include <Poco/Data/MySQL/Connector.h>
 #include <Poco/Data/Session.h>
 
 #include "model/person.hpp"
@@ -20,7 +20,6 @@ public:
   model::person get_person(std::string name) const;
 
 private:
-  Poco::Data::MySQL::Connector connector_;
-  mutable Poco::Data::Session session_;
+  mutable std::optional<Poco::Data::Session> session_;
 };
 } // namespace e1::people

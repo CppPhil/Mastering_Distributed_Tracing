@@ -1,14 +1,16 @@
+#include <Poco/Data/MySQL/Connector.h>
 #include <Poco/Data/Statement.h>
 
 #include "repository.hpp"
 
 namespace e1::people {
 const std::string conn_info = "host=127.0.0.1;port=3306;user=phillip;password="
-                              "mysqlpwd;auto-reconnect=true;dbname=chapter04";
+                              "mysqlpwd;auto-reconnect=true;db=chapter04";
 
-repository::repository()
-  : connector_(), session_(connector_.createSession(conn_info)) {
-  // nop
+repository::repository() : session_(std::nullopt) {
+  Poco::Data::MySQL::Connector::registerConnector();
+
+  session_ = Poco::Data::Session("MySQL", conn_info);
 }
 
 repository::~repository() = default;
@@ -18,7 +20,7 @@ model::person repository::get_person(std::string name) const {
 
   std::string title;
   std::string description;
-  Poco::Data::Statement select(session_);
+  Poco::Data::Statement select(*session_);
   select << "select title, description from people where name = ?", use(name),
     into(title), into(description);
 
