@@ -24,9 +24,11 @@ std::string say_hello(const people::repository& repo, std::string&& name) {
 }
 } // namespace
 
-say_hello_http_controller::say_hello_http_controller(
-  const people::repository& repo)
-  : repo_(repo) {
+say_hello_http_controller::say_hello_http_controller() : repo_(nullptr) {
+}
+
+void say_hello_http_controller::set_repo(const people::repository& repo) {
+  repo_ = &repo;
 }
 
 void say_hello_http_controller::handle_say_hello(
@@ -34,7 +36,7 @@ void say_hello_http_controller::handle_say_hello(
   std::function<void(const drogon::HttpResponsePtr&)>&& callback,
   std::string&& name) {
   auto resp = drogon::HttpResponse::newHttpResponse();
-  resp->setBody(say_hello(repo_, std::move(name)));
+  resp->setBody(say_hello(*repo_, std::move(name)));
   callback(resp);
 }
 } // namespace e1
