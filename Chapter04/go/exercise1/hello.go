@@ -7,6 +7,8 @@ import (
 
 	opentracing "github.com/opentracing/opentracing-go"
 
+	otlog "github.com/opentracing/opentracing-go/log"
+
 	"github.com/PacktPublishing/Mastering-Distributed-Tracing/Chapter04/go/exercise1/people"
 
 	"github.com/PacktPublishing/Mastering-Distributed-Tracing/Chapter04/go/lib/tracing"
@@ -34,20 +36,34 @@ func handleSayHello(w http.ResponseWriter, r *http.Request) {
 	defer span.Finish()
 
 	name := strings.TrimPrefix(r.URL.Path, "/sayHello/")
-	greeting, err := SayHello(name)
+	greeting, err := SayHello(name, span)
+
 	if err != nil {
+		span.SetTag("error", true)
+		span.LogFields(otlog.Error(err))
+
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	span.SetTag("response", greeting)
 	w.Write([]byte(greeting))
 }
 
 // SayHello creates a greeting for the named person.
-func SayHello(name string) (string, error) {
+func SayHello(name string, span opentracing.Span) (string, error) {
 	person, err := repo.GetPerson(name)
+
 	if err != nil {
 		return "", err
 	}
+
+	span.LogKV(
+		"name", person.Name,
+		"title", person.Title,
+		"description", person.Description,
+	)
+
 	return FormatGreeting(
 		person.Name,
 		person.Title,
