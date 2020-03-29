@@ -1,2 +1,2 @@
-Port Go changes to C++.
+Continue Yuri's Book
 
