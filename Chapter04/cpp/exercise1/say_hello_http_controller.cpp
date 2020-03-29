@@ -19,15 +19,20 @@ std::string format_greeting(const std::string& name, const std::string& title,
   return response;
 }
 
-std::string say_hello(const people::repository& repo, std::string&& name,
-                      opentracing::Span& span) {
-  const model::person person(repo.get_person(std::move(name)));
+tl::optional<std::string> say_hello(const people::repository& repo,
+                                    std::string&& name,
+                                    opentracing::Span& span) {
+  const tl::optional<model::person> person(repo.get_person(std::move(name)));
 
-  span.Log({{"name", person.name()},
-            {"title", person.title()},
-            {"description", person.description()}});
+  if (person.has_value()) {
+    span.Log({{"name", person->name()},
+              {"title", person->title()},
+              {"description", person->description()}});
 
-  return format_greeting(person.name(), person.title(), person.description());
+    return format_greeting(person->name(), person->title(),
+                           person->description());
+  } else
+    return tl::nullopt;
 }
 } // namespace
 
@@ -43,10 +48,23 @@ void say_hello_http_controller::handle_say_hello(
   std::function<void(const drogon::HttpResponsePtr&)>&& callback,
   std::string&& name) {
   auto span = opentracing::Tracer::Global()->StartSpan("say-hello");
+
   auto resp = drogon::HttpResponse::newHttpResponse();
-  auto greeting = say_hello(*repo_, std::move(name), *span);
-  span->SetTag("response", greeting);
-  resp->setBody(std::move(greeting));
-  callback(resp);
+
+  tl::optional<std::string> optional_greeting(
+    say_hello(*repo_, std::move(name), *span));
+
+  if (optional_greeting.has_value()) {
+    std::string& greeting(*optional_greeting);
+    span->SetTag("response", greeting);
+    resp->setBody(std::move(greeting));
+    callback(resp);
+  } else {
+    span->SetTag("error", true);
+    span->Log({{"error", "database access failed"}});
+
+    resp->setStatusCode(drogon::k200OK);
+    callback(resp);
+  }
 }
 } // namespace e1

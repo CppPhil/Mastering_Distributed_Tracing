@@ -20,7 +20,7 @@ repository::repository() : session_(std::nullopt) {
 
 repository::~repository() = default;
 
-model::person repository::get_person(std::string name) const {
+tl::optional<model::person> repository::get_person(std::string name) const {
   using namespace Poco::Data::Keywords;
 
   std::string title;
@@ -30,8 +30,10 @@ model::person repository::get_person(std::string name) const {
     into(title), into(description), range(0, 1);
 
   while (!select.done()) {
-    select.execute();
-    return model::person(name, title, description);
+    if (select.execute() == 0)
+      return tl::nullopt;
+    else
+      return model::person(name, title, description);
   }
 
   return model::person(name, "", "");

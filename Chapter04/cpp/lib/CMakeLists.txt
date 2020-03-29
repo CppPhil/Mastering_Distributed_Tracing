@@ -31,6 +31,14 @@ target_link_libraries(
 target_include_directories(
     ${LIB_NAME}
     PUBLIC
+    ${Chapter04_project_SOURCE_DIR}/external/philslib/include
+    ${Chapter04_project_SOURCE_DIR}/external/optional/include
+    ${Chapter04_project_SOURCE_DIR}/external/expected/include
+)
+
+target_include_directories(
+    ${LIB_NAME}
+    PUBLIC
     ${cpp_lib_project_SOURCE_DIR}
 )
 

@@ -7,3 +7,12 @@
 [submodule "Chapter04/cpp/external/poco"]
 	path = Chapter04/cpp/external/poco
 	url = https://github.com/pocoproject/poco.git
+[submodule "Chapter04/cpp/external/philslib"]
+	path = Chapter04/cpp/external/philslib
+	url = https://github.com/CppPhil/philslib.git
+[submodule "Chapter04/cpp/external/optional"]
+	path = Chapter04/cpp/external/optional
+	url = https://github.com/TartanLlama/optional.git
+[submodule "Chapter04/cpp/external/expected"]
+	path = Chapter04/cpp/external/expected
+	url = https://github.com/TartanLlama/expected.git
