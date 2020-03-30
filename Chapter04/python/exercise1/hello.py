@@ -1,26 +1,34 @@
 from flask import Flask
 from .database import Person
 from lib.tracing import init_tracer
+import opentracing
 
-app = Flask('py-1-hello')
+app = Flask('py-2-hello')
 init_tracer('py-2-hello')
 
 @app.route("/sayHello/<name>")
 def say_hello(name):
-    person = get_person(name)
-    resp = format_greeting(
-        name=person.name,
-        title=person.title,
-        description=person.description,
-    )
-    return resp
+    with opentracing.tracer.start_span('say-hello') as span:
+        person = get_person(name, span)
+        resp = format_greeting(
+            name=person.name,
+            title=person.title,
+            description=person.description,
+        )
+        span.set_tag('response', resp)
+        return resp
 
 
-def get_person(name):
+def get_person(name, span):
     person = Person.get(name)
     if person is None:
         person = Person()
         person.name = name
+    span.log_kv({
+        'name': person.name,
+        'title': person.title,
+        'description': person.description
+    })
     return person
 
 
