@@ -22,7 +22,7 @@ public:
   ~repository();
 
   tl::optional<model::person>
-  get_person(std::string name, const opentracing::Span& parent_span) const;
+  get_person(std::string name, const opentracing::SpanContext* ctx) const;
 
 private:
   mutable std::optional<Poco::Data::Session> session_;

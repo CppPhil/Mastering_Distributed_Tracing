@@ -24,6 +24,8 @@ if [ ! -d build ]; then
     mkdir build
 fi
 
+$DIR/format.sh
+
 cd build
 
 CC="ccache gcc" CXX="ccache g++" cmake -DCMAKE_BUILD_TYPE=$build_type -DBUILD_TESTING=OFF -DJAEGERTRACING_BUILD_EXAMPLES=OFF -G "Unix Makefiles" ..

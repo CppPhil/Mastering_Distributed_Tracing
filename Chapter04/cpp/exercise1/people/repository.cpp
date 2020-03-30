@@ -22,14 +22,14 @@ repository::~repository() = default;
 
 tl::optional<model::person>
 repository::get_person(std::string name,
-                       const opentracing::Span& parent_span) const {
+                       const opentracing::SpanContext* ctx) const {
   using namespace Poco::Data::Keywords;
 
   const char* const query
     = "select title, description from people where name = ?";
 
   auto span = opentracing::Tracer::Global()->StartSpan(
-    "get-person", {opentracing::ChildOf(&parent_span.context())});
+    "get-person", {opentracing::ChildOf(ctx)});
   span->SetTag("db.statement", query);
 
   std::string title;
