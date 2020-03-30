@@ -1,4 +1,0 @@
-Add drogon HTTP lib
-
-Add MySQL database lib
-
