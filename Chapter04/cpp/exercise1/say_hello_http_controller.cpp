@@ -6,7 +6,7 @@ namespace e1 {
 namespace {
 std::string format_greeting(const std::string& name, const std::string& title,
                             const std::string& description,
-                            opentracing::Span& parent_span) {
+                            const opentracing::Span& parent_span) {
   auto span = opentracing::Tracer::Global()->StartSpan(
     "format-greeting", {opentracing::ChildOf(&parent_span.context())});
 

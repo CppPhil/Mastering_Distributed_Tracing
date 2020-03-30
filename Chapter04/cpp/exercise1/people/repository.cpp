@@ -21,7 +21,8 @@ repository::repository() : session_(std::nullopt) {
 repository::~repository() = default;
 
 tl::optional<model::person>
-repository::get_person(std::string name, opentracing::Span& parent_span) const {
+repository::get_person(std::string name,
+                       const opentracing::Span& parent_span) const {
   using namespace Poco::Data::Keywords;
 
   const char* const query

@@ -21,8 +21,8 @@ public:
 
   ~repository();
 
-  tl::optional<model::person> get_person(std::string name,
-                                         opentracing::Span& parent_span) const;
+  tl::optional<model::person>
+  get_person(std::string name, const opentracing::Span& parent_span) const;
 
 private:
   mutable std::optional<Poco::Data::Session> session_;
