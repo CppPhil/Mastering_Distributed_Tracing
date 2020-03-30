@@ -10,7 +10,7 @@ import (
 	"github.com/PacktPublishing/Mastering-Distributed-Tracing/Chapter04/go/lib/model"
 )
 
-const dburl = "root:mysqlpwd@tcp(127.0.0.1:3306)/chapter04"
+const dburl = "phillip:mysqlpwd@tcp(127.0.0.1:3306)/chapter04"
 
 // Repository retrieves information about people.
 type Repository struct {

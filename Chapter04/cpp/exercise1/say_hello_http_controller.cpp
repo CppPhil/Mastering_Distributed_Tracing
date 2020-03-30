@@ -5,7 +5,11 @@
 namespace e1 {
 namespace {
 std::string format_greeting(const std::string& name, const std::string& title,
-                            const std::string& description) {
+                            const std::string& description,
+                            opentracing::Span& parent_span) {
+  auto span = opentracing::Tracer::Global()->StartSpan(
+    "format-greeting", {opentracing::ChildOf(&parent_span.context())});
+
   std::string response = "Hello, ";
 
   if (!title.empty())
@@ -22,7 +26,8 @@ std::string format_greeting(const std::string& name, const std::string& title,
 tl::optional<std::string> say_hello(const people::repository& repo,
                                     std::string&& name,
                                     opentracing::Span& span) {
-  const tl::optional<model::person> person(repo.get_person(std::move(name)));
+  const tl::optional<model::person> person(
+    repo.get_person(std::move(name), span));
 
   if (person.has_value()) {
     span.Log({{"name", person->name()},
@@ -30,7 +35,7 @@ tl::optional<std::string> say_hello(const people::repository& repo,
               {"description", person->description()}});
 
     return format_greeting(person->name(), person->title(),
-                           person->description());
+                           person->description(), span);
   } else
     return tl::nullopt;
 }

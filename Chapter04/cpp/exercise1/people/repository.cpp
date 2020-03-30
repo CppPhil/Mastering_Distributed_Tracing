@@ -20,14 +20,21 @@ repository::repository() : session_(std::nullopt) {
 
 repository::~repository() = default;
 
-tl::optional<model::person> repository::get_person(std::string name) const {
+tl::optional<model::person>
+repository::get_person(std::string name, opentracing::Span& parent_span) const {
   using namespace Poco::Data::Keywords;
+
+  const char* const query
+    = "select title, description from people where name = ?";
+
+  auto span = opentracing::Tracer::Global()->StartSpan(
+    "get-person", {opentracing::ChildOf(&parent_span.context())});
+  span->SetTag("db.statement", query);
 
   std::string title;
   std::string description;
   Poco::Data::Statement select(*session_);
-  select << "select title, description from people where name = ?", use(name),
-    into(title), into(description), range(0, 1);
+  select << query, use(name), into(title), into(description), range(0, 1);
 
   while (!select.done()) {
     if (select.execute() == 0)
