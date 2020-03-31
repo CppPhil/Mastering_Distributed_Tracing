@@ -1,0 +1,51 @@
+#include <jaegertracing/Tracer.h>
+
+#include "people/repository.hpp"
+#include "http_controller.hpp"
+
+namespace e4 {
+http_controller::http_controller()
+  : repo_(nullptr)
+{
+}
+
+void http_controller::set_repo(
+  const people::repository& repo) 
+{
+  repo_ = &repo;
+}
+
+
+void http_controller::handle_get_person(
+    const drogon::HttpRequestPtr& req,
+    std::function<void (const drogon::HttpResponsePtr&)>&& callback,
+    std::string&& name)
+{
+  auto span = opentracing::Tracer::Global()->StartSpan(
+    "/getPerson"
+  );
+
+  const auto opt_person =
+    repo_->get_person(std::move(name), span->Context());
+
+  if (opt_person.has_value()) {
+    const auto& person = *opt_person;
+    span->Log({
+      {"name", person.name()},
+      {"title", person.title()},
+      {"description", person.description()}
+    });
+
+    // TODO: serialize person to JSON string.
+    
+    resp->setBody(json);
+    callback(resp);
+  } else {
+    span->SetTag("error", true);
+    span->Log({{"error", "database access failed"}});
+    resp->setStatusCode(drogon::k500InternalServerError);
+    callback(resp);
+  }
+}
+} // namespace e4
+

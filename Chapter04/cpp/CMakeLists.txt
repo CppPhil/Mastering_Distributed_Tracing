@@ -29,5 +29,7 @@ add_subdirectory(external/drogon)
 add_subdirectory(external/poco)
 
 add_subdirectory(lib)
-add_subdirectory(exercise1)
+add_subdirectory(bigbrother_service)
+add_subdirectory(formatter_service)
+add_subdirectory(main_app)
 

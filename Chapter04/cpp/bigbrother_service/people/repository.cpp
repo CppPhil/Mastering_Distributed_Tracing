@@ -5,7 +5,7 @@
 
 #include "repository.hpp"
 
-namespace e1::people {
+namespace e4::people {
 const std::string conn_info = "host=127.0.0.1;port=3306;user=phillip;password="
                               "mysqlpwd;auto-reconnect=true;db=chapter04";
 
@@ -46,4 +46,4 @@ repository::get_person(std::string name,
 
   return model::person(name, "", "");
 }
-} // namespace e1::people
+} // namespace e4::people

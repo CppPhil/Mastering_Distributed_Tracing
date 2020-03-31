@@ -10,7 +10,7 @@
 
 #include "model/person.hpp"
 
-namespace e1::people {
+namespace e4::people {
 class repository {
 public:
   repository();
@@ -27,4 +27,4 @@ public:
 private:
   mutable std::optional<Poco::Data::Session> session_;
 };
-} // namespace e1::people
+} // namespace e4::people
