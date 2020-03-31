@@ -1,6 +1,7 @@
 package people
 
 import (
+  "context"
 	"database/sql"
 	"log"
 
@@ -36,19 +37,19 @@ func NewRepository() *Repository {
 // If not found, it still returns a Person object with only name
 // field populated.
 func (r *Repository) GetPerson(
+	ctx context.Context,
 	name string,
-	span opentracing.Span,
 ) (model.Person, error) {
 	query := "select title, description from people where name = ?"
 
-	span = opentracing.GlobalTracer().StartSpan(
+	span, ctx := opentracing.StartSpanFromContext(
+		ctx,
 		"get-person",
-		opentracing.ChildOf(span.Context()),
 		opentracing.Tag{Key: "db.statement", Value: query},
 	)
 	defer span.Finish()
 
-	rows, err := r.db.Query(query, name)
+	rows, err := r.db.QueryContext(ctx, query, name)
 	if err != nil {
 		return model.Person{}, err
 	}
