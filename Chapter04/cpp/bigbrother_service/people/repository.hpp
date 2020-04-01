@@ -6,16 +6,16 @@
 
 #include <Poco/Data/Session.h>
 
+#include <pl/noncopyable.hpp>
+
 #include "model/person.hpp"
 
 namespace e4::people {
 class repository {
 public:
+  PL_NONCOPYABLE(repository);
+
   repository();
-
-  repository(const repository&) = delete;
-
-  repository& operator=(const repository&) = delete;
 
   ~repository();
 
