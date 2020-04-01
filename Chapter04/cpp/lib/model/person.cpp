@@ -4,6 +4,7 @@
 #include <Poco/JSON/Parser.h>
 
 #include "model/person.hpp"
+#include "json/object.hpp"
 
 namespace model {
 person person::from_json(const std::string& json) {
@@ -52,5 +53,10 @@ const std::string& person::description() const noexcept {
 
 void person::description(std::string&& s) {
   description_ = std::move(s);
+}
+
+std::string person::to_json() const {
+  return json::object(std::pair{"name", name()}, std::pair{"title", title()},
+                      std::pair{"description", description()});
 }
 } // namespace model

@@ -24,6 +24,8 @@ public:
 
   void description(std::string&& s);
 
+  std::string to_json() const;
+
 private:
   std::string name_;
   std::string title_;

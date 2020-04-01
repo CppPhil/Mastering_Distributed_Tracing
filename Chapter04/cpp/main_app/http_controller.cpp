@@ -45,17 +45,7 @@ tl::optional<std::string> format_greeting(const opentracing::SpanContext* ctx,
   request->setPath("/formatGreeting");
   request->setMethod(drogon::Post);
   request->setContentTypeCode(drogon::CT_APPLICATION_JSON);
-  request->setBody("{\n"
-                   "\"name\": "
-                   + person.name()
-                   + ",\n"
-                     "\"title\": "
-                   + person.title()
-                   + ",\n"
-                     "\"description\": "
-                   + person.description()
-                   + "\n"
-                     "}");
+  request->setBody(person.to_json());
 
   const std::pair<drogon::ReqResult, drogon::HttpResponsePtr> pair(
     http_client->sendRequest(request));
