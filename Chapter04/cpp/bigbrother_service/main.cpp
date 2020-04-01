@@ -11,7 +11,7 @@ int main() {
 
   drogon::app().addListener("localhost", 8081);
 
-  auto http_controller = std::make_shared<>(e4::http_controller);
+  auto http_controller = std::make_shared<e4::http_controller>();
   http_controller->set_repo(repo);
 
   drogon::app().registerController(http_controller);
