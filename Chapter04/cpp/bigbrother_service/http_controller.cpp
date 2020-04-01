@@ -1,23 +1,21 @@
 #include <sstream>
 
 #include "model/person.hpp"
+#include <Poco/JSON/Object.h>
 #include <tl/optional.hpp>
-//#include <Poco/JSON/Object.h>
 
 #include <jaegertracing/Tracer.h>
 
 #include "http_controller.hpp"
-//#include "people/repository.hpp"
+#include "people/repository.hpp"
 
 namespace e4 {
-http_controller::http_controller() /*: repo_(nullptr)*/ {
+http_controller::http_controller() : repo_(nullptr) {
 }
 
-/*
 void http_controller::set_repo(const people::repository& repo) {
   repo_ = &repo;
 }
-*/
 
 void http_controller::handle_get_person(
   const drogon::HttpRequestPtr& req,
@@ -27,10 +25,7 @@ void http_controller::handle_get_person(
 
   auto resp = drogon::HttpResponse::newHttpResponse();
 
-  // const auto opt_person = repo_->get_person(std::move(name),
-  // span->Context());
-
-  const tl::optional opt_person(model::person("HORST", "TITEL", "DESCR"));
+  const auto opt_person = repo_->get_person(std::move(name), &span->context());
 
   if (opt_person.has_value()) {
     const auto& person = *opt_person;
@@ -38,16 +33,13 @@ void http_controller::handle_get_person(
                {"title", person.title()},
                {"description", person.description()}});
 
-    /*
     const auto obj = Poco::JSON::Object{}
                        .set("name", person.name())
                        .set("title", person.title())
                        .set("desciption", person.description());
     std::ostringstream oss;
     obj.stringify(oss);
-    const auto json = obj.str(); */
-
-    const std::string json = "FOTZE";
+    const auto json = oss.str();
 
     resp->setStatusCode(drogon::k200OK);
     resp->setBody(json);

@@ -4,11 +4,10 @@
 #include <pl/noncopyable.hpp>
 
 namespace e4 {
-/*
+
 namespace people {
 class repository;
 } // namespace people
-*/
 
 class http_controller : public drogon::HttpController<http_controller, false> {
 public:
@@ -16,7 +15,7 @@ public:
 
   http_controller();
 
-  //  void set_repo(const people::repository& repo);
+  void set_repo(const people::repository& repo);
 
   // TODO: See if the stuff below can be private.
 
@@ -31,6 +30,6 @@ public:
     std::string&& name);
 
 private:
-  //    const people::repository* repo_;
+  const people::repository* repo_;
 };
 } // namespace e4
