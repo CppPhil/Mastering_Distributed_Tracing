@@ -1,5 +1,4 @@
 #pragma once
-#include <drogon/HttpClient.h>
 #include <drogon/HttpController.h>
 
 #include <pl/noncopyable.hpp>
@@ -23,6 +22,5 @@ public:
     std::string&& name);
 
 private:
-  drogon::HttpClientPtr http_client_;
 };
 } // namespace e4

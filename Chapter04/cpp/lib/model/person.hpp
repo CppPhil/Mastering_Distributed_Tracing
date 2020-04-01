@@ -6,6 +6,8 @@
 namespace model {
 class person {
 public:
+  static person from_json(const std::string& json);
+
   person();
 
   person(std::string name, std::string title, std::string description);
