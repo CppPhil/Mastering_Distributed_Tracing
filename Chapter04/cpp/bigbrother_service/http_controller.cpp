@@ -1,6 +1,6 @@
 #include <sstream>
 
-#include <Poco/JSON/Object.h>
+//#include <Poco/JSON/Object.h>
 
 #include <jaegertracing/Tracer.h>
 
@@ -29,13 +29,16 @@ void http_controller::handle_get_person(
                {"title", person.title()},
                {"description", person.description()}});
 
+    /*
     const auto obj = Poco::JSON::Object{}
                        .set("name", person.name())
                        .set("title", person.title())
                        .set("desciption", person.description());
     std::ostringstream oss;
     obj.stringify(oss);
-    const auto json = obj.str();
+    const auto json = obj.str(); */
+
+    const std::string json = "FOTZE";
 
     resp->setStatusCode(drogon::k200OK);
     resp->setBody(json);
