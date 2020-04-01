@@ -1,3 +1,4 @@
+#include <ostream>
 #include <utility>
 
 #include "util/error.hpp"
@@ -9,5 +10,9 @@ error::error(std::string error_message)
 
 const std::string& error::message() const {
   return error_message_;
+}
+
+std::ostream& operator<<(std::ostream& os, const error& e) {
+  return os << "error{\"message\": \"" << e.message() << "\"}";
 }
 } // namespace util

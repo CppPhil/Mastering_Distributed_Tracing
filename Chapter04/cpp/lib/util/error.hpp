@@ -1,4 +1,6 @@
 #pragma once
+#include <iosfwd>
+
 #include <tl/expected.hpp>
 
 #include "util/source_location.hpp"
@@ -14,6 +16,8 @@ public:
   [[noreturn]] void throw_as() const {
     throw Exception(message());
   }
+
+  friend std::ostream& operator<<(std::ostream& os, const error& e);
 
 private:
   std::string error_message_;
