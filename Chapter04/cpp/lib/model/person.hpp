@@ -21,20 +21,12 @@ private:
 };
 } // namespace model
 
-namespace drogon
-{
+namespace drogon {
 template <>
-inline ::model::person fromRequest(
-  const HttpRequest& req
-)
-{
+inline ::model::person fromRequest(const HttpRequest& req) {
   auto json = req.getJsonObject();
-  ::model::person p(
-    json["name"].asString(),
-    json["title"].asString(),
-    json["description"].asString()
-  );
+  ::model::person p(json["name"].asString(), json["title"].asString(),
+                    json["description"].asString());
   return p;
 }
 } // namespace drogon
-
