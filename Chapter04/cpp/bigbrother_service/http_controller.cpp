@@ -1,11 +1,9 @@
-#include <sstream>
-
-#include <Poco/JSON/Object.h>
-
 #include <jaegertracing/Tracer.h>
+#include <sstream>
 
 #include "http_controller.hpp"
 #include "people/repository.hpp"
+#include "json/object.hpp"
 
 namespace e4 {
 http_controller::http_controller() : repo_(nullptr) {
@@ -29,16 +27,10 @@ void http_controller::handle_get_person(
              {"title", person.title()},
              {"description", person.description()}});
 
-  const auto obj = Poco::JSON::Object{}
-                     .set("name", person.name())
-                     .set("title", person.title())
-                     .set("desciption", person.description());
-  std::ostringstream oss;
-  obj.stringify(oss);
-  const auto json = oss.str();
-
   resp->setStatusCode(drogon::k200OK);
-  resp->setBody(json);
+  resp->setBody(json::object(std::pair{"name", person.name()},
+                             std::pair{"title", person.title()},
+                             std::pair{"description", person.description()}));
   callback(resp);
 }
 } // namespace e4

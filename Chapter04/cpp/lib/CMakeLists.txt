@@ -6,6 +6,7 @@ project(cpp_lib_project VERSION 1.0.0)
 set(LIB_NAME cpp_lib)
 
 set(LIB_HEADERS
+    json/object.hpp
     model/person.hpp
     tracing/init.hpp)
 
