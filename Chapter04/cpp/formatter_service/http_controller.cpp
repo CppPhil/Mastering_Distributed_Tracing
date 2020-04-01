@@ -8,7 +8,7 @@ http_controller::http_controller() {
 void http_controller::handle_format_greeting(
   const drogon::HttpRequestPtr& req,
   std::function<void(const drogon::HttpResponsePtr&)>&& callback,
-  model::person&& person) {
+  model::person&& person) const {
   auto span = opentracing::Tracer::Global()->StartSpan("/formatGreeting");
   auto resp = drogon::HttpResponse::newHttpResponse();
 

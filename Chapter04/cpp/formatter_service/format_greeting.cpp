@@ -7,7 +7,7 @@ std::string format_greeting(pl::string_view name, pl::string_view title,
                             pl::string_view description,
                             const opentracing::SpanContext* ctx) {
   auto span = opentracing::Tracer::Global()->StartSpan(
-    "format-greeting" {opentracing::ChildOf(ctx)});
+    "format-greeting", {opentracing::ChildOf(ctx)});
 
   std::ostringstream oss;
 
