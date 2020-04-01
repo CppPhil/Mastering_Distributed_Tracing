@@ -1,9 +1,12 @@
 #include <tl/expected.hpp>
+#include <tl/optional.hpp>
 
 #include <drogon/HttpClient.h>
 #include <drogon/HttpRequest.h>
 
 #include <jaegertracing/Tracer.h>
+
+#include <pl/string_view.hpp>
 
 #include "http_controller.hpp"
 #include "model/person.hpp"
@@ -12,6 +15,8 @@ namespace e4 {
 namespace {
 tl::expected<model::person, std::string>
 get_person(const opentracing::SpanContext* ctx, std::string&& name) {
+  using namespace std::string_literals;
+
   auto http_client = drogon::HttpClient::newHttpClient("http://localhost:8081");
 
   auto request = drogon::HttpRequest::newHttpRequest();
@@ -28,7 +33,7 @@ get_person(const opentracing::SpanContext* ctx, std::string&& name) {
 
     return person;
   } else {
-    return tl::unexpected("Request to /getPerson failed!");
+    return tl::unexpected("Request to /getPerson failed!"s);
   }
 }
 
@@ -68,7 +73,7 @@ std::string say_hello(const opentracing::SpanContext* ctx, std::string&& name) {
   const auto exp_person = get_person(ctx, std::move(name));
 
   if (exp_person.has_value()) {
-    const auto opt_greeting = format_greeting(ctx, person);
+    const auto opt_greeting = format_greeting(ctx, *exp_person);
 
     if (opt_greeting.has_value()) {
       return *opt_greeting;
@@ -93,7 +98,7 @@ void http_controller::handle_say_hello(
 
   auto greeting = say_hello(&span->context(), std::move(name));
 
-  std::string_view sv = greeting;
+  pl::string_view sv = greeting;
 
   if (sv.starts_with("ERROR")) {
     span->SetTag("error", true);
