@@ -19,7 +19,7 @@ public:
   void handle_say_hello(
     const drogon::HttpRequestPtr& req,
     std::function<void(const drogon::HttpResponsePtr&)>&& callback,
-    std::string&& name);
+    std::string&& name) const;
 
 private:
 };
