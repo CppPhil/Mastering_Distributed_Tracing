@@ -26,6 +26,8 @@ target_link_libraries(
     Threads::Threads
     jaegertracing
     drogon
+    Poco::Foundation
+    Poco::JSON
 )
 
 target_include_directories(

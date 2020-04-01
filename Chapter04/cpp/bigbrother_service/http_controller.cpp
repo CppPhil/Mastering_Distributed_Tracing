@@ -1,3 +1,7 @@
+#include <sstream>
+
+#include <Poco/JSON/Object.h>
+
 #include <jaegertracing/Tracer.h>
 
 #include "people/repository.hpp"
@@ -14,7 +18,6 @@ void http_controller::set_repo(
 {
   repo_ = &repo;
 }
-
 
 void http_controller::handle_get_person(
     const drogon::HttpRequestPtr& req,
@@ -36,8 +39,16 @@ void http_controller::handle_get_person(
       {"description", person.description()}
     });
 
-    // TODO: serialize person to JSON string.
-    
+    const auto obj 
+      = Poco::JSON::Object{}
+          .set("name", person.name())
+          .set("title", person.title())
+          .set("desciption", person.description());
+    std::ostringstream oss;
+    obj.stringify(oss);
+    const auto json = obj.str();
+
+    resp->setStatusCode(drogon::k200OK);        
     resp->setBody(json);
     callback(resp);
   } else {

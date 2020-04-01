@@ -5,11 +5,13 @@ project(bigbrother_project VERSION 1.0.0)
 set(APP_NAME bigbrother_app)
 
 set(HEADERS
-    people/repository.hpp)
+    people/repository.hpp
+    http_controller.hpp)
 
 set(SOURCES
-    main.cpp
-    people/repository.cpp)
+    people/repository.cpp
+    http_controller.cpp
+    main.cpp)
 
 add_executable(
   ${APP_NAME}
@@ -21,7 +23,6 @@ target_link_libraries(
   ${APP_NAME}
   PRIVATE
   cpp_lib
-  Poco::Foundation
   Poco::DataMySQL
 )
 
