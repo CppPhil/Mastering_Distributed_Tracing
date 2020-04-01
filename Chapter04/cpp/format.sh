@@ -26,8 +26,10 @@ readonly PREV_DIR=$(pwd)
 cd $DIR
 
 # Format the source files.
-format $DIR/exercise1
+format $DIR/bigbrother_service
+format $DIR/formatter_service
 format $DIR/lib
+format $DIR/main_app
 
 cd $PREV_DIR
 
