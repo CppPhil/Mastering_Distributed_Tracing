@@ -1,22 +1,16 @@
-#include <tl/expected.hpp>
-#include <tl/optional.hpp>
-
 #include <drogon/HttpClient.h>
 #include <drogon/HttpRequest.h>
 
 #include <jaegertracing/Tracer.h>
 
-#include <pl/string_view.hpp>
-
 #include "http_controller.hpp"
 #include "model/person.hpp"
+#include "util/error.hpp"
 
 namespace e4 {
 namespace {
-tl::expected<model::person, std::string>
+tl::expected<model::person, util::error>
 get_person(const opentracing::SpanContext* ctx, std::string&& name) {
-  using namespace std::string_literals;
-
   auto http_client = drogon::HttpClient::newHttpClient("http://localhost:8081");
 
   auto request = drogon::HttpRequest::newHttpRequest();
@@ -33,12 +27,13 @@ get_person(const opentracing::SpanContext* ctx, std::string&& name) {
 
     return person;
   } else {
-    return tl::unexpected("Request to /getPerson failed!"s);
+    return UTIL_UNEXPECTED("Request to /getPerson failed!");
   }
 }
 
-tl::optional<std::string> format_greeting(const opentracing::SpanContext* ctx,
-                                          const model::person& person) {
+tl::expected<std::string, util::error>
+format_greeting(const opentracing::SpanContext* ctx,
+                const model::person& person) {
   auto http_client = drogon::HttpClient::newHttpClient("http://localhost:8082");
 
   auto request = drogon::HttpRequest::newHttpRequest();
@@ -57,23 +52,24 @@ tl::optional<std::string> format_greeting(const opentracing::SpanContext* ctx,
 
     return greeting_result;
   } else {
-    return tl::nullopt;
+    return UTIL_UNEXPECTED("Request to /formatGreeting failed!");
   }
 }
 
-std::string say_hello(const opentracing::SpanContext* ctx, std::string&& name) {
+tl::expected<std::string, util::error>
+say_hello(const opentracing::SpanContext* ctx, std::string&& name) {
   const auto exp_person = get_person(ctx, std::move(name));
 
   if (exp_person.has_value()) {
-    const auto opt_greeting = format_greeting(ctx, *exp_person);
+    const auto exp_greeting = format_greeting(ctx, *exp_person);
 
-    if (opt_greeting.has_value()) {
-      return *opt_greeting;
+    if (exp_greeting.has_value()) {
+      return *exp_greeting;
     } else {
-      return "ERROR: Request to /formatGreeting failed";
+      return tl::make_unexpected(exp_greeting.error());
     }
   } else {
-    return "ERROR: " + exp_person.error();
+    return tl::make_unexpected(exp_person.error());
   }
 }
 } // namespace
@@ -88,24 +84,22 @@ void http_controller::handle_say_hello(
   auto span = opentracing::Tracer::Global()->StartSpan("say-hello");
   auto resp = drogon::HttpResponse::newHttpResponse();
 
-  auto greeting = say_hello(&span->context(), std::move(name));
+  auto exp_greeting = say_hello(&span->context(), std::move(name));
 
-  pl::string_view sv = greeting;
-
-  if (sv.starts_with("ERROR")) {
+  if (!exp_greeting.has_value()) {
     span->SetTag("error", true);
-    span->SetTag("errorMessage", greeting);
+    span->SetTag("errorMessage", exp_greeting.error().message());
 
     resp->setStatusCode(drogon::k500InternalServerError);
-    resp->setBody(greeting);
+    resp->setBody(exp_greeting.error().message());
     callback(resp);
     return;
   }
 
-  span->SetTag("response", greeting);
+  span->SetTag("response", *exp_greeting);
 
   resp->setStatusCode(drogon::k200OK);
-  resp->setBody(greeting);
+  resp->setBody(*exp_greeting);
   callback(resp);
 }
 } // namespace e4

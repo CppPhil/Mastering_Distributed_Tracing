@@ -1,0 +1,13 @@
+#include <utility>
+
+#include "util/error.hpp"
+
+namespace util {
+error::error(std::string error_message)
+  : error_message_(std::move(error_message)) {
+}
+
+const std::string& error::message() const {
+  return error_message_;
+}
+} // namespace util
