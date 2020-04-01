@@ -3,7 +3,6 @@
 
 #include "http_controller.hpp"
 #include "people/repository.hpp"
-#include "json/object.hpp"
 
 namespace e4 {
 http_controller::http_controller() : repo_(nullptr) {
@@ -27,9 +26,7 @@ void http_controller::handle_get_person(
              {"description", person.description()}});
 
   resp->setStatusCode(drogon::k200OK);
-  resp->setBody(json::object(std::pair{"name", person.name()},
-                             std::pair{"title", person.title()},
-                             std::pair{"description", person.description()}));
+  resp->setBody(person.to_json());
   callback(resp);
 }
 } // namespace e4

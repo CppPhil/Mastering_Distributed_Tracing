@@ -11,7 +11,7 @@ person person::from_json(const std::string& json) {
   Poco::JSON::Parser parser;
   auto result = parser.parse(json);
 
-  Poco::JSON::Object::Ptr object = result.extract<Poco::JSON::Object::Ptr>();
+  auto object = result.extract<Poco::JSON::Object::Ptr>();
 
   auto name = object->get("name");
   auto title = object->get("title");

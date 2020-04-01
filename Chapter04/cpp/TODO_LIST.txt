@@ -1,17 +1,2 @@
 Finish exercise04a port of Go to C++
 
-bigbrother_service
- -> Tracing
- -> SQL
- -> HTTP
-
-formatter_service
- -> Tracing
- -> HTTP
-
-main_app
- -> Tracing
- -> HTTP
-
-Clean up
-
