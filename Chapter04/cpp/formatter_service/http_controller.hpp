@@ -12,13 +12,12 @@ public:
 
   http_controller();
 
-  // TODO: Check if some of this can be private.
-
   METHOD_LIST_BEGIN
     ADD_METHOD_TO(http_controller::handle_format_greeting, "/formatGreeting",
                   drogon::Post);
   METHOD_LIST_END
 
+private:
   void handle_format_greeting(
     const drogon::HttpRequestPtr& req,
     std::function<void(const drogon::HttpResponsePtr&)>&& callback,

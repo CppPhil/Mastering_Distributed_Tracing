@@ -17,19 +17,17 @@ public:
 
   void set_repo(const people::repository& repo);
 
-  // TODO: See if the stuff below can be private.
-
   METHOD_LIST_BEGIN
     ADD_METHOD_TO(http_controller::handle_get_person, "/getPerson/{name}",
                   drogon::Get);
   METHOD_LIST_END
 
+private:
   void handle_get_person(
     const drogon::HttpRequestPtr& req,
     std::function<void(const drogon::HttpResponsePtr&)>&& callback,
     std::string&& name);
 
-private:
   const people::repository* repo_;
 };
 } // namespace e4
