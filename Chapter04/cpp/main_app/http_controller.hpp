@@ -12,7 +12,7 @@ public:
 
   // TODO: Check what can be private here.
   METHOD_LIST_BEGIN
-    ADD_METHOD_TO(http_controller::handle_say_hello, "/sayHello{name}",
+    ADD_METHOD_TO(http_controller::handle_say_hello, "/sayHello/{name}",
                   drogon::Get);
   METHOD_LIST_END
 

@@ -16,9 +16,9 @@ readonly PREV_DIR=$(pwd)
 
 cd $BUILD_DIR
 
-./bigbrother_service/bigbrother_app
-./formatter_service/formatter_app
-./main_app/main_app
+./bigbrother_service/bigbrother_app &
+./formatter_service/formatter_app &
+./main_app/main_app &
 
 cd $PREV_DIR
 exit 0
