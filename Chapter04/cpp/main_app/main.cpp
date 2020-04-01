@@ -4,9 +4,9 @@
 #include "tracing/init.hpp"
 
 int main() {
-  tracing::init("TODO HERE");
+  tracing::init("cpp-4-hello");
 
-  drogon::app().addListener("localhost", TODO PORT HERE);
+  drogon::app().addListener("localhost", 8080);
 
   auto http_controller = std::make_shared<e4::http_controller>();
 
