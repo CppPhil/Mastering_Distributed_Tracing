@@ -1,5 +1,3 @@
-Have some shit to kill 'em all.
-
 Finish exercise04a port of Go to C++
 
 bigbrother_service
