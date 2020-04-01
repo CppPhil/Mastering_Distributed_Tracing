@@ -18,7 +18,6 @@ void http_controller::handle_get_person(
   std::function<void(const drogon::HttpResponsePtr&)>&& callback,
   std::string&& name) {
   auto span = opentracing::Tracer::Global()->StartSpan("/getPerson");
-
   auto resp = drogon::HttpResponse::newHttpResponse();
 
   const auto person = repo_->get_person(std::move(name), &span->context());
