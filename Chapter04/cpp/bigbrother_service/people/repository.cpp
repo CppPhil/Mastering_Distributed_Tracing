@@ -20,7 +20,7 @@ repository::repository() : session_(std::nullopt) {
 
 repository::~repository() = default;
 
-tl::optional<model::person>
+model::person
 repository::get_person(std::string name,
                        const opentracing::SpanContext* ctx) const {
   using namespace Poco::Data::Keywords;
@@ -38,10 +38,8 @@ repository::get_person(std::string name,
   select << query, use(name), into(title), into(description), range(0, 1);
 
   while (!select.done()) {
-    if (select.execute() == 0)
-      return tl::nullopt;
-    else
-      return model::person(name, title, description);
+    select.execute();
+    return model::person(name, title, description);
   }
 
   return model::person(name, "", "");

@@ -2,8 +2,6 @@
 #include <optional>
 #include <string>
 
-#include <tl/optional.hpp>
-
 #include <jaegertracing/Tracer.h>
 
 #include <Poco/Data/Session.h>
@@ -21,8 +19,8 @@ public:
 
   ~repository();
 
-  tl::optional<model::person>
-  get_person(std::string name, const opentracing::SpanContext* ctx) const;
+  model::person get_person(std::string name,
+                           const opentracing::SpanContext* ctx) const;
 
 private:
   mutable std::optional<Poco::Data::Session> session_;

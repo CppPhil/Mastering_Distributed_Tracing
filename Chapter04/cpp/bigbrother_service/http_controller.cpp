@@ -1,8 +1,6 @@
 #include <sstream>
 
-#include "model/person.hpp"
 #include <Poco/JSON/Object.h>
-#include <tl/optional.hpp>
 
 #include <jaegertracing/Tracer.h>
 
@@ -25,30 +23,22 @@ void http_controller::handle_get_person(
 
   auto resp = drogon::HttpResponse::newHttpResponse();
 
-  const auto opt_person = repo_->get_person(std::move(name), &span->context());
+  const auto person = repo_->get_person(std::move(name), &span->context());
 
-  if (opt_person.has_value()) {
-    const auto& person = *opt_person;
-    span->Log({{"name", person.name()},
-               {"title", person.title()},
-               {"description", person.description()}});
+  span->Log({{"name", person.name()},
+             {"title", person.title()},
+             {"description", person.description()}});
 
-    const auto obj = Poco::JSON::Object{}
-                       .set("name", person.name())
-                       .set("title", person.title())
-                       .set("desciption", person.description());
-    std::ostringstream oss;
-    obj.stringify(oss);
-    const auto json = oss.str();
+  const auto obj = Poco::JSON::Object{}
+                     .set("name", person.name())
+                     .set("title", person.title())
+                     .set("desciption", person.description());
+  std::ostringstream oss;
+  obj.stringify(oss);
+  const auto json = oss.str();
 
-    resp->setStatusCode(drogon::k200OK);
-    resp->setBody(json);
-    callback(resp);
-  } else {
-    span->SetTag("error", true);
-    span->Log({{"error", "database access failed"}});
-    resp->setStatusCode(drogon::k500InternalServerError);
-    callback(resp);
-  }
+  resp->setStatusCode(drogon::k200OK);
+  resp->setBody(json);
+  callback(resp);
 }
 } // namespace e4
