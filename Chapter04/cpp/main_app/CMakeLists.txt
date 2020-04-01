@@ -8,13 +8,11 @@ project(cpp_exercise1_project VERSION 1.0.0)
 set(APP_NAME cpp_exercise1_App)
 
 set(APP_HEADERS
-    hello.hpp
-    say_hello_http_controller.hpp)
+    http_controller.hpp)
 
 set(APP_SOURCES
-    hello.cpp
-    main.cpp
-    say_hello_http_controller.cpp)
+    http_controller.cpp
+    main.cpp)
 
 add_executable(
     ${APP_NAME}

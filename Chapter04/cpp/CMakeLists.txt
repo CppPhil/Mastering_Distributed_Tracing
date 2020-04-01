@@ -31,5 +31,5 @@ add_subdirectory(external/poco)
 add_subdirectory(lib)
 add_subdirectory(bigbrother_service)
 add_subdirectory(formatter_service)
-#add_subdirectory(main_app)
+add_subdirectory(main_app)
 
