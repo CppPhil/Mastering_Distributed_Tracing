@@ -1,3 +1,5 @@
+#include <tl/expected.hpp>
+
 #include <drogon/HttpClient.h>
 #include <drogon/HttpRequest.h>
 
@@ -8,8 +10,8 @@
 
 namespace e4 {
 namespace {
-model::person get_person(const opentracing::SpanContext* ctx,
-                         std::string&& name) {
+tl::expected<model::person, std::string>
+get_person(const opentracing::SpanContext* ctx, std::string&& name) {
   auto http_client = drogon::HttpClient::newHttpClient("http://localhost:8081");
 
   auto request = drogon::HttpRequest::newHttpRequest();
@@ -26,12 +28,12 @@ model::person get_person(const opentracing::SpanContext* ctx,
 
     return person;
   } else {
-    // TODO: Handle error.
+    return tl::unexpected("Request to /getPerson failed!");
   }
 }
 
-std::string format_greeting(const opentracing::SpanContext* ctx,
-                            const model::person& person) {
+tl::optional<std::string> format_greeting(const opentracing::SpanContext* ctx,
+                                          const model::person& person) {
   auto http_client = drogon::HttpClient::newHttpClient("http://localhost:8082");
 
   auto request = drogon::HttpRequest::newHttpRequest();
@@ -58,14 +60,24 @@ std::string format_greeting(const opentracing::SpanContext* ctx,
 
     return greeting_result;
   } else {
-    // TODO: Handle error.
+    return tl::nullopt;
   }
 }
 
 std::string say_hello(const opentracing::SpanContext* ctx, std::string&& name) {
-  const auto person = get_person(http_client, ctx, std::move(name));
+  const auto exp_person = get_person(ctx, std::move(name));
 
-  return format_greeting(ctx, person);
+  if (exp_person.has_value()) {
+    const auto opt_greeting = format_greeting(ctx, person);
+
+    if (opt_greeting.has_value()) {
+      return *opt_greeting;
+    } else {
+      return "ERROR: Request to /formatGreeting failed";
+    }
+  } else {
+    return "ERROR: " + exp_person.error();
+  }
 }
 } // namespace
 
@@ -80,6 +92,18 @@ void http_controller::handle_say_hello(
   auto resp = drogon::HttpResponse::newHttpResponse();
 
   auto greeting = say_hello(&span->context(), std::move(name));
+
+  std::string_view sv = greeting;
+
+  if (sv.starts_with("ERROR")) {
+    span->SetTag("error", true);
+    span->SetTag("errorMessage", greeting);
+
+    resp->setStatusCode(drogon::k500InternalServerError);
+    resp->setBody(greeting);
+    callback(resp);
+    return;
+  }
 
   span->SetTag("response", greeting);
 
