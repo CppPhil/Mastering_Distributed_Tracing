@@ -1,1 +1,3 @@
+Hexify / unhexify binary data to / from string
+
 Port exercise4b to C++

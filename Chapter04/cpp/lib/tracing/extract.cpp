@@ -17,6 +17,8 @@ extract(const drogon::HttpRequest& http_request) {
   const std::string& header_value
     = http_request.getHeader("OPENTRACING_SPAN_CONTEXT");
 
+  // TODO: HERE
+
   opentracing::expected<std::unique_ptr<opentracing::SpanContext>> exp(
     extract(header_value.data(), header_value.size()));
 
