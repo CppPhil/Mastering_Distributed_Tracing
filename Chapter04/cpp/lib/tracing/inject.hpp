@@ -1,13 +1,16 @@
 #pragma once
-#include <vector>
+#include <string>
+
+#include <drogon/HttpResponse.h>
 
 #include <opentracing/tracer.h>
-
-#include <pl/byte.hpp>
 
 #include "util/error.hpp"
 
 namespace tracing {
-tl::expected<std::vector<pl::byte>, util::error>
+tl::expected<std::string, util::error>
 inject(const opentracing::SpanContext& sc);
+
+tl::expected<void, util::error> inject(drogon::HttpResponse& http_response,
+                                       const opentracing::SpanContext& sc);
 } // namespace tracing

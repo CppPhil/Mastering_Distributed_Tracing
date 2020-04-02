@@ -11,4 +11,21 @@ extract(const void* data, size_t byte_count) {
 
   return opentracing::Tracer::Global()->Extract(iss);
 }
+
+tl::expected<std::unique_ptr<opentracing::SpanContext>, util::error>
+extract(const drogon::HttpRequest& http_request) {
+  const std::string& header_value
+    = http_request.getHeader("OPENTRACING_SPAN_CONTEXT");
+
+  opentracing::expected<std::unique_ptr<opentracing::SpanContext>> exp(
+    extract(header_value.data(), header_value.size()));
+
+  if (!exp.has_value()) {
+    std::ostringstream oss;
+    oss << exp.error();
+    return UTIL_UNEXPECTED(oss.str());
+  }
+
+  return *std::move(exp);
+}
 } // namespace tracing

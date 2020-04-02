@@ -81,6 +81,8 @@ void http_controller::handle_say_hello(
   const drogon::HttpRequestPtr& req,
   std::function<void(const drogon::HttpResponsePtr&)>&& callback,
   std::string&& name) const {
+  // TODO: HERE
+
   auto span = opentracing::Tracer::Global()->StartSpan("say-hello");
   auto resp = drogon::HttpResponse::newHttpResponse();
 
