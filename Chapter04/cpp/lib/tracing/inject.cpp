@@ -23,8 +23,7 @@ inject(const opentracing::SpanContext& sc) {
 }
 
 tl::expected<void, util::error> inject(drogon::HttpResponse& http_response,
-                                       const opentracing::SpanContext& sc);
-{
+                                       const opentracing::SpanContext& sc) {
   tl::expected<std::string, util::error> exp(inject(sc));
 
   if (!exp.has_value()) {
