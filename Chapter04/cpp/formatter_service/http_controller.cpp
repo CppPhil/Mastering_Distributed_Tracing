@@ -12,9 +12,9 @@ void http_controller::handle_format_greeting(
   model::person&& person) const {
   auto ctx = tracing::extract(*req);
   auto span = (!ctx.has_value() || *ctx == nullptr)
-    ? opentracing::Tracer::Global()
-        ->StartSpan("/formatGreeting") opentracing::Tracer::Global()
-        ->StartSpan("/formatGreeting", {opentracing::ChildOf(cxt->get())});
+                ? opentracing::Tracer::Global()->StartSpan("/formatGreeting")
+                : opentracing::Tracer::Global()->StartSpan(
+                  "/formatGreeting", {opentracing::ChildOf(ctx->get())});
 
   // TODO: See if this looks like Go in Jaeger
   span->SetTag("span.kind", "server");
