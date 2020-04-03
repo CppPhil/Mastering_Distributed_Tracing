@@ -3,7 +3,6 @@
 
 #include "http_controller.hpp"
 #include "people/repository.hpp"
-#include "tracing/create_span.hpp"
 #include "tracing/extract.hpp"
 
 namespace e4 {
@@ -18,10 +17,13 @@ void http_controller::handle_get_person(
   const drogon::HttpRequestPtr& req,
   std::function<void(const drogon::HttpResponsePtr&)>&& callback,
   std::string&& name) {
-  const tl::expected<std::unique_ptr<opentracing::SpanContext>, util::error>
-    ctx(tracing::extract(*req));
+  tl::expected<std::unique_ptr<opentracing::SpanContext>, util::error> ctx(
+    tracing::extract(*req));
 
-  auto span = tracing::create_span(ctx, "/getPerson");
+  auto span = (!ctx.has_value() || *ctx == nullptr)
+                ? opentracing::Tracer::Global()->StartSpan("/getPerson")
+                : opentracing::Tracer::Global()->StartSpan(
+                  "/getPerson", {opentracing::ChildOf(ctx->get())});
   auto resp = drogon::HttpResponse::newHttpResponse();
 
   const auto person = repo_->get_person(std::move(name), &span->context());

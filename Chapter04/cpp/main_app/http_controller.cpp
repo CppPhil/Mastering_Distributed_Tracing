@@ -5,7 +5,6 @@
 
 #include "http_controller.hpp"
 #include "model/person.hpp"
-#include "tracing/create_span.hpp"
 #include "tracing/extract.hpp"
 #include "tracing/inject.hpp"
 #include "util/error.hpp"
@@ -21,6 +20,7 @@ send_request(const opentracing::SpanContext* ctx,
 
   auto span = opentracing::Tracer::Global()->StartSpan(
     operation_name, {opentracing::ChildOf(ctx)});
+  // TODO: Check that this shows up like Go in jaeger.
   span->SetTag("span.kind", "client");
   span->SetTag("http.url", host + path);
   span->SetTag("http.method", http_request->getMethodString());
@@ -105,9 +105,16 @@ void http_controller::handle_say_hello(
   std::function<void(const drogon::HttpResponsePtr&)>&& callback,
   std::string&& name) const {
   auto span_context = tracing::extract(*req);
-  auto span = tracing::create_span(span_context, "say-hello");
+  auto span = (!span_context.has_value() || *span_context == nullptr)
+                ? opentracing::Tracer::Global()->StartSpan("say-hello")
+                : opentracing::Tracer::Global()->StartSpan(
+                  "say-hello", {opentracing::ChildOf(span_context->get())});
+
+  // TODO: Check if this looks like the stuff from Go in Jaeger.
   span->SetTag("span.kind", "server");
+
   auto resp = drogon::HttpResponse::newHttpResponse();
+
   auto exp_greeting = say_hello(&span->context(), std::move(name));
 
   if (!exp_greeting.has_value()) {
@@ -121,6 +128,7 @@ void http_controller::handle_say_hello(
   }
 
   span->SetTag("response", *exp_greeting);
+
   resp->setStatusCode(drogon::k200OK);
   resp->setBody(*exp_greeting);
   callback(resp);
