@@ -12,3 +12,6 @@ build
 # Ignore all local history of files
 .history
 
+# Doxygen generated documentation
+docs
+
