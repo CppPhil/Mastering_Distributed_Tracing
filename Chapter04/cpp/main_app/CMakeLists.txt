@@ -6,11 +6,21 @@ project(main_app_project VERSION 1.0.0)
 set(APP_NAME main_app)
 
 set(APP_HEADERS
-    http_controller.hpp)
+    format_greeting.hpp
+    get_person.hpp
+    http_controller.hpp
+    pick_random_greeting.hpp
+    say_hello.hpp
+    send_request.hpp)
 
 set(APP_SOURCES
+    format_greeting.cpp
+    get_person.cpp
     http_controller.cpp
-    main.cpp)
+    main.cpp
+    pick_random_greeting.cpp
+    say_hello.cpp
+    send_request.cpp)
 
 add_executable(
     ${APP_NAME}
