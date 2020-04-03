@@ -4,7 +4,7 @@
 #include "tracing/init.hpp"
 
 int main() {
-  tracing::init("cpp-4-hello");
+  tracing::init("cpp-5-hello");
 
   drogon::app().addListener("localhost", 8080);
 

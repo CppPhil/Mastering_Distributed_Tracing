@@ -1,7 +1,13 @@
+#include <array>
+#include <string>
+
 #include <drogon/HttpClient.h>
 #include <drogon/HttpRequest.h>
 
 #include <jaegertracing/Tracer.h>
+
+#include <pl/cont/make_array.hpp>
+#include <pl/random_number_generator.hpp>
 
 #include "http_controller.hpp"
 #include "model/person.hpp"
@@ -57,16 +63,25 @@ get_person(const opentracing::SpanContext* ctx, std::string&& name) {
   }
 }
 
+const std::string& pick_random_greeting() {
+  using namespace std::string_literals;
+  thread_local pl::random_number_generator<std::mt19937_64> rng;
+  static const auto greetings = pl::cont::make_array("Hi"s, "Howdy"s, "G'day"s);
+
+  return greetings[rng.generate<size_t>(0U, greetings.size() - 1U)];
+}
+
 tl::expected<std::string, util::error>
-format_greeting(const opentracing::SpanContext* ctx,
-                const model::person& person) {
+format_greeting(opentracing::Span& span, const model::person& person) {
   auto request = drogon::HttpRequest::newHttpRequest();
   request->setMethod(drogon::Post);
   request->setContentTypeCode(drogon::CT_APPLICATION_JSON);
   request->setBody(person.to_json());
 
+  span.SetBaggageItem("greeting", pick_random_greeting());
+
   const std::pair<drogon::ReqResult, drogon::HttpResponsePtr> pair(send_request(
-    /* ctx */ ctx,
+    /* ctx */ &span.context(),
     /* operation_name */ "formatGreeting",
     /* host */ "http://localhost:8082",
     /* path */ "/formatGreeting",
@@ -83,12 +98,12 @@ format_greeting(const opentracing::SpanContext* ctx,
   }
 }
 
-tl::expected<std::string, util::error>
-say_hello(const opentracing::SpanContext* ctx, std::string&& name) {
-  const auto exp_person = get_person(ctx, std::move(name));
+tl::expected<std::string, util::error> say_hello(opentracing::Span& span,
+                                                 std::string&& name) {
+  const auto exp_person = get_person(&span.context(), std::move(name));
 
   if (exp_person.has_value()) {
-    const auto exp_greeting = format_greeting(ctx, *exp_person);
+    const auto exp_greeting = format_greeting(span, *exp_person);
 
     if (exp_greeting.has_value()) {
       return *exp_greeting;
@@ -112,7 +127,7 @@ void http_controller::handle_say_hello(
   auto span = tracing::create_span(span_context, "say-hello");
   span->SetTag("span.kind", "server");
   auto resp = drogon::HttpResponse::newHttpResponse();
-  auto exp_greeting = say_hello(&span->context(), std::move(name));
+  auto exp_greeting = say_hello(*span, std::move(name));
 
   if (!exp_greeting.has_value()) {
     span->SetTag("error", true);

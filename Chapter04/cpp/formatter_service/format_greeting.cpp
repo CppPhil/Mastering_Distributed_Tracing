@@ -9,9 +9,13 @@ std::string format_greeting(pl::string_view name, pl::string_view title,
   auto span = opentracing::Tracer::Global()->StartSpan(
     "format-greeting", {opentracing::ChildOf(ctx)});
 
-  std::ostringstream oss;
+  std::string greeting(span->BaggageItem("greeting"));
 
-  oss << "Hello, ";
+  if (greeting.empty())
+    greeting = "Hello";
+
+  std::ostringstream oss;
+  oss << greeting << ", ";
 
   if (!title.empty())
     oss << title << ' ';

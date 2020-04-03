@@ -5,7 +5,7 @@
 #include "tracing/init.hpp"
 
 int main() {
-  tracing::init("cpp-4-bigbrother");
+  tracing::init("cpp-5-bigbrother");
 
   const e4::people::repository repo;
 
