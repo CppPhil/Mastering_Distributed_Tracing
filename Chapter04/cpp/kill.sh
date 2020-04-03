@@ -1,5 +1,7 @@
 #!/bin/bash
 
+### Kills the microservices.
+
 pkill -f ./bigbrother_service/bigbrother_app
 pkill -f ./formatter_service/formatter_app 
 pkill -f ./main_app/main_app

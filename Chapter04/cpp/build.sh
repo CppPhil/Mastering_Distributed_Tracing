@@ -1,5 +1,7 @@
 #!/bin/bash
 
+### Builds the project.
+
 catch_errors() {
     printf "\nbuild.sh failed!\n" >&2
     exit 1

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+### Launches the microservices.
+
 catch_errors() {
     printf "\nrun.sh failed!\n" >&2
     exit 1
