@@ -3,6 +3,10 @@
 #include "http_controller.hpp"
 #include "tracing/init.hpp"
 
+/**
+ * Entry point of the application.
+ * @return The exit code. A non-zero exit code indicates failure.
+ */
 int main() {
   tracing::init("cpp-5-hello");
 

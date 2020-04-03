@@ -3,6 +3,10 @@
 #include "http_controller.hpp"
 #include "tracing/init.hpp"
 
+/**
+ * Entry point for the formatter service.
+ * @return The exit code.
+ */
 int main() {
   tracing::init("cpp-5-formatter");
 

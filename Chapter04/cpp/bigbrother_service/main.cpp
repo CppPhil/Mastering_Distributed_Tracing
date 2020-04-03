@@ -4,6 +4,10 @@
 #include "people/repository.hpp"
 #include "tracing/init.hpp"
 
+/**
+ * Entry point for the bigbrother_service.
+ * @return The exit code.
+ */
 int main() {
   tracing::init("cpp-5-bigbrother");
 
