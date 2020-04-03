@@ -8,6 +8,7 @@ set(LIB_NAME cpp_lib)
 set(LIB_HEADERS
     json/object.hpp
     model/person.hpp
+    tracing/create_span.hpp
     tracing/extract.hpp
     tracing/init.hpp
     tracing/inject.hpp
@@ -16,6 +17,7 @@ set(LIB_HEADERS
 
 set(LIB_SOURCES
     model/person.cpp
+    tracing/create_span.cpp
     tracing/extract.cpp
     tracing/init.cpp
     tracing/inject.cpp
