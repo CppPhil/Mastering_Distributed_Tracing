@@ -24,18 +24,29 @@ inject(const opentracing::SpanContext& sc) {
   return oss.str();
 }
 
-tl::expected<void, util::error> inject(drogon::HttpResponse& http_response,
-                                       const opentracing::SpanContext& sc) {
+namespace {
+template <class T>
+tl::expected<void, util::error>
+inject_impl(T& x, const opentracing::SpanContext& sc) {
   tl::expected<std::string, util::error> exp(inject(sc));
 
-  if (!exp.has_value()) {
+  if (!exp.has_value())
     return tl::make_unexpected(exp.error());
-  }
 
   const std::string& bytes = *exp;
-
-  http_response.addHeader("OPENTRACING_SPAN_CONTEXT",
-                          pl::hexify(bytes.data(), bytes.size(), ""));
+  x.addHeader("OPENTRACING_SPAN_CONTEXT",
+              pl::hexify(bytes.data(), bytes.size(), ""));
   return {};
+}
+} // namespace
+
+tl::expected<void, util::error> inject(drogon::HttpResponse& http_response,
+                                       const opentracing::SpanContext& sc) {
+  return inject_impl(http_response, sc);
+}
+
+tl::expected<void, util::error> inject(drogon::HttpRequest& http_request,
+                                       const opentracing::SpanContext& sc) {
+  return inject_impl(http_request, sc);
 }
 } // namespace tracing

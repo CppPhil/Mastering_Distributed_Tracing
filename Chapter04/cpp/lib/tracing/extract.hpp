@@ -2,6 +2,7 @@
 #include <cstddef>
 
 #include <drogon/HttpRequest.h>
+#include <drogon/HttpResponse.h>
 
 #include <opentracing/tracer.h>
 
@@ -13,4 +14,7 @@ extract(const void* data, size_t byte_count);
 
 tl::expected<std::unique_ptr<opentracing::SpanContext>, util::error>
 extract(const drogon::HttpRequest& http_request);
+
+tl::expected<std::unique_ptr<opentracing::SpanContext>, util::error>
+extract(const drogon::HttpResponse& http_response);
 } // namespace tracing

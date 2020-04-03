@@ -14,10 +14,12 @@ extract(const void* data, size_t byte_count) {
   return opentracing::Tracer::Global()->Extract(iss);
 }
 
+namespace {
+template <class T>
 tl::expected<std::unique_ptr<opentracing::SpanContext>, util::error>
-extract(const drogon::HttpRequest& http_request) {
+extract_impl(const T& x) {
   const std::string& header_value_hex_string
-    = http_request.getHeader("OPENTRACING_SPAN_CONTEXT");
+    = x.getHeader("OPENTRACING_SPAN_CONTEXT");
 
   const std::vector<pl::byte> data(pl::unhexify(header_value_hex_string, 0));
 
@@ -31,5 +33,16 @@ extract(const drogon::HttpRequest& http_request) {
   }
 
   return *std::move(exp);
+}
+} // namespace
+
+tl::expected<std::unique_ptr<opentracing::SpanContext>, util::error>
+extract(const drogon::HttpRequest& http_request) {
+  return extract_impl(http_request);
+}
+
+tl::expected<std::unique_ptr<opentracing::SpanContext>, util::error>
+extract(const drogon::HttpResponse& http_response) {
+  return extract_impl(http_response);
 }
 } // namespace tracing

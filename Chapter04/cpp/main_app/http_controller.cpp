@@ -5,19 +5,40 @@
 
 #include "http_controller.hpp"
 #include "model/person.hpp"
+#include "tracing/extract.hpp"
+#include "tracing/inject.hpp"
 #include "util/error.hpp"
 
 namespace e4 {
 namespace {
+std::pair<drogon::ReqResult, drogon::HttpResponsePtr>
+send_request(const opentracing::SpanContext* ctx,
+             const std::string& operation_name, const std::string& host,
+             const std::string& path, drogon::HttpRequestPtr& http_request) {
+  auto http_client = drogon::HttpClient::newHttpClient(host);
+  http_request->setPath(path);
+
+  auto span = opentracing::Tracer::Global()->StartSpan(
+    operation_name, {opentracing::ChildOf(ctx)});
+  // TODO: Check that this shows up like Go in jaeger.
+  span->SetTag("span.kind", "client");
+  span->SetTag("http.url", host + path);
+  span->SetTag("http.method", http_request->getMethodString());
+
+  tracing::inject(*http_request, span->context());
+
+  return http_client->sendRequest(http_request);
+}
+
 tl::expected<model::person, util::error>
 get_person(const opentracing::SpanContext* ctx, std::string&& name) {
-  auto http_client = drogon::HttpClient::newHttpClient("http://localhost:8081");
-
   auto request = drogon::HttpRequest::newHttpRequest();
-  request->setPath("/getPerson/" + std::move(name));
-
-  const std::pair<drogon::ReqResult, drogon::HttpResponsePtr> pair(
-    http_client->sendRequest(request));
+  const std::pair<drogon::ReqResult, drogon::HttpResponsePtr> pair(send_request(
+    /* ctx */ ctx,
+    /* operation_name */ "getPerson",
+    /* host */ "http://localhost:8081",
+    /* path */ "/getPerson/" + std::move(name),
+    /* http_request */ request));
 
   const auto& [req_result, http_response_ptr] = pair;
 
@@ -34,16 +55,17 @@ get_person(const opentracing::SpanContext* ctx, std::string&& name) {
 tl::expected<std::string, util::error>
 format_greeting(const opentracing::SpanContext* ctx,
                 const model::person& person) {
-  auto http_client = drogon::HttpClient::newHttpClient("http://localhost:8082");
-
   auto request = drogon::HttpRequest::newHttpRequest();
-  request->setPath("/formatGreeting");
   request->setMethod(drogon::Post);
   request->setContentTypeCode(drogon::CT_APPLICATION_JSON);
   request->setBody(person.to_json());
 
-  const std::pair<drogon::ReqResult, drogon::HttpResponsePtr> pair(
-    http_client->sendRequest(request));
+  const std::pair<drogon::ReqResult, drogon::HttpResponsePtr> pair(send_request(
+    /* ctx */ ctx,
+    /* operation_name */ "formatGreeting",
+    /* host */ "http://localhost:8082",
+    /* path */ "/formatGreeting",
+    /* http_request */ request));
 
   const auto& [req_result, http_response_ptr] = pair;
 
@@ -81,9 +103,15 @@ void http_controller::handle_say_hello(
   const drogon::HttpRequestPtr& req,
   std::function<void(const drogon::HttpResponsePtr&)>&& callback,
   std::string&& name) const {
-  // TODO: HERE
+  auto span_context = tracing::extract(*req);
+  auto span = (!span_context.has_value() || *span_context == nullptr)
+                ? opentracing::Tracer::Global()->StartSpan("say-hello")
+                : opentracing::Tracer::Global()->StartSpan(
+                  "say-hello", {opentracing::ChildOf(span_context->get())});
 
-  auto span = opentracing::Tracer::Global()->StartSpan("say-hello");
+  // TODO: Check if this looks like the stuff from Go in Jaeger.
+  span->SetTag("span.kind", "server");
+
   auto resp = drogon::HttpResponse::newHttpResponse();
 
   auto exp_greeting = say_hello(&span->context(), std::move(name));
