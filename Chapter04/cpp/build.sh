@@ -28,7 +28,7 @@ $DIR/format.sh
 
 cd build
 
-$DIR/configure.sh
+CC="ccache gcc" CXX="ccache g++" cmake -DCMAKE_BUILD_TYPE=$build_type -DBUILD_TESTING=OFF -DJAEGERTRACING_BUILD_EXAMPLES=OFF -G "Unix Makefiles" ..
 CC="ccache gcc" CXX="ccache g++" cmake --build . -- -j$(nproc)
 
 cd $PREV_DIR
