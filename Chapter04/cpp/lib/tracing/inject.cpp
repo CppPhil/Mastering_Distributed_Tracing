@@ -29,7 +29,7 @@ tl::expected<void, util::error> inject(drogon::HttpResponse& http_response,
   if (!exp.has_value()) {
     return tl::make_unexpected(exp.error());
   }
-  
+
   // TODO: HERE
   http_response.addHeader("OPENTRACING_SPAN_CONTEXT", *std::move(exp));
   return {};
