@@ -1,7 +1,7 @@
 #!/bin/bash
 
 catch_errors() {
-    printf "\nbuild.sh failed!\n" >&2
+    printf "\nconfigure.sh failed!\n" >&2
     exit 1
 }
 
@@ -14,22 +14,15 @@ readonly PREV_DIR=$(pwd)
 
 cd $DIR
 
-build_type="$1"
-
-if [ -z "$build_type" ]; then
-    build_type="Debug"
-fi
+$DIR/format.sh
 
 if [ ! -d build ]; then
     mkdir build
 fi
 
-$DIR/format.sh
-
 cd build
 
-$DIR/configure.sh
-CC="ccache gcc" CXX="ccache g++" cmake --build . -- -j$(nproc)
+CC="ccache gcc" CXX="ccache g++" cmake -DCMAKE_BUILD_TYPE=$build_type -DBUILD_TESTING=OFF -DJAEGERTRACING_BUILD_EXAMPLES=OFF -G "Unix Makefiles" ..
 
 cd $PREV_DIR
 
