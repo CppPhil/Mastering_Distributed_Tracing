@@ -3,7 +3,7 @@
 #include "send_request.hpp"
 #include "tracing/inject.hpp"
 
-namespace e4 {
+namespace e5 {
 std::pair<drogon::ReqResult, drogon::HttpResponsePtr>
 send_request(const opentracing::SpanContext* ctx,
              const std::string& operation_name, const std::string& host,
@@ -26,4 +26,4 @@ send_request(const opentracing::SpanContext* ctx,
 
   return http_client->sendRequest(http_request);
 }
-} // namespace e4
+} // namespace e5

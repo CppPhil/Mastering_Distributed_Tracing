@@ -5,8 +5,8 @@
 
 #include <pl/string_view.hpp>
 
-namespace e4 {
+namespace e5 {
 std::string format_greeting(pl::string_view name, pl::string_view title,
                             pl::string_view description,
                             const opentracing::SpanContext* ctx);
-} // namespace e4
+} // namespace e5

@@ -5,7 +5,7 @@
 #include "get_person.hpp"
 #include "send_request.hpp"
 
-namespace e4 {
+namespace e5 {
 tl::expected<model::person, util::error>
 get_person(const opentracing::SpanContext* ctx, std::string&& name) {
   auto request = drogon::HttpRequest::newHttpRequest();
@@ -27,4 +27,4 @@ get_person(const opentracing::SpanContext* ctx, std::string&& name) {
     return UTIL_UNEXPECTED("Request to /getPerson failed!");
   }
 }
-} // namespace e4
+} // namespace e5

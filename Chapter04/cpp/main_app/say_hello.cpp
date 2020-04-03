@@ -4,7 +4,7 @@
 #include "get_person.hpp"
 #include "say_hello.hpp"
 
-namespace e4 {
+namespace e5 {
 tl::expected<std::string, util::error> say_hello(opentracing::Span& span,
                                                  std::string&& name) {
   const auto exp_person = get_person(&span.context(), std::move(name));
@@ -21,4 +21,4 @@ tl::expected<std::string, util::error> say_hello(opentracing::Span& span,
     return tl::make_unexpected(exp_person.error());
   }
 }
-} // namespace e4
+} // namespace e5

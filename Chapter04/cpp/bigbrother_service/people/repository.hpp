@@ -10,7 +10,7 @@
 
 #include "model/person.hpp"
 
-namespace e4::people {
+namespace e5::people {
 class repository {
 public:
   PL_NONCOPYABLE(repository);
@@ -25,4 +25,4 @@ public:
 private:
   mutable std::optional<Poco::Data::Session> session_;
 };
-} // namespace e4::people
+} // namespace e5::people

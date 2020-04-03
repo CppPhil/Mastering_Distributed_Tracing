@@ -2,7 +2,7 @@
 
 #include "format_greeting.hpp"
 
-namespace e4 {
+namespace e5 {
 std::string format_greeting(pl::string_view name, pl::string_view title,
                             pl::string_view description,
                             const opentracing::SpanContext* ctx) {
@@ -27,4 +27,4 @@ std::string format_greeting(pl::string_view name, pl::string_view title,
 
   return oss.str();
 }
-} // namespace e4
+} // namespace e5

@@ -5,7 +5,7 @@
 #include "tracing/create_span.hpp"
 #include "tracing/extract.hpp"
 
-namespace e4 {
+namespace e5 {
 http_controller::http_controller() {
 }
 
@@ -34,4 +34,4 @@ void http_controller::handle_say_hello(
   resp->setBody(*exp_greeting);
   callback(resp);
 }
-} // namespace e4
+} // namespace e5

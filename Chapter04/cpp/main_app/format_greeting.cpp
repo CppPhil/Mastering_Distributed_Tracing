@@ -4,7 +4,7 @@
 #include "pick_random_greeting.hpp"
 #include "send_request.hpp"
 
-namespace e4 {
+namespace e5 {
 tl::expected<std::string, util::error>
 format_greeting(opentracing::Span& span, const model::person& person) {
   auto request = drogon::HttpRequest::newHttpRequest();
@@ -31,4 +31,4 @@ format_greeting(opentracing::Span& span, const model::person& person) {
     return UTIL_UNEXPECTED("Request to /formatGreeting failed!");
   }
 }
-} // namespace e4
+} // namespace e5

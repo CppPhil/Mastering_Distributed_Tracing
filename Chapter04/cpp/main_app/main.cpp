@@ -8,7 +8,7 @@ int main() {
 
   drogon::app().addListener("localhost", 8080);
 
-  auto http_controller = std::make_shared<e4::http_controller>();
+  auto http_controller = std::make_shared<e5::http_controller>();
 
   drogon::app().registerController(http_controller);
   drogon::app().run();

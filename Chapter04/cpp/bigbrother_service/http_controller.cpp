@@ -6,7 +6,7 @@
 #include "tracing/create_span.hpp"
 #include "tracing/extract.hpp"
 
-namespace e4 {
+namespace e5 {
 http_controller::http_controller() : repo_(nullptr) {
 }
 
@@ -34,4 +34,4 @@ void http_controller::handle_get_person(
   resp->setBody(person.to_json());
   callback(resp);
 }
-} // namespace e4
+} // namespace e5

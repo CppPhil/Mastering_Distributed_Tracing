@@ -3,7 +3,7 @@
 
 #include <pl/noncopyable.hpp>
 
-namespace e4 {
+namespace e5 {
 
 namespace people {
 class repository;
@@ -30,4 +30,4 @@ private:
 
   const people::repository* repo_;
 };
-} // namespace e4
+} // namespace e5

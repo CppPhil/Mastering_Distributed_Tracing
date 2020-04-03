@@ -3,7 +3,7 @@
 
 #include <pl/noncopyable.hpp>
 
-namespace e4 {
+namespace e5 {
 class http_controller : public drogon::HttpController<http_controller, false> {
 public:
   PL_NONCOPYABLE(http_controller);
@@ -21,4 +21,4 @@ private:
     std::function<void(const drogon::HttpResponsePtr&)>&& callback,
     std::string&& name) const;
 };
-} // namespace e4
+} // namespace e5
