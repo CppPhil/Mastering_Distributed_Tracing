@@ -5,6 +5,7 @@
 #include "tracing/inject.hpp"
 
 namespace tracing {
+namespace {
 tl::expected<std::string, util::error>
 inject(const opentracing::SpanContext& sc) {
   std::ostringstream oss;
@@ -24,7 +25,6 @@ inject(const opentracing::SpanContext& sc) {
   return oss.str();
 }
 
-namespace {
 template <class T>
 tl::expected<void, util::error>
 inject_impl(T& x, const opentracing::SpanContext& sc) {

@@ -6,6 +6,7 @@
 #include "tracing/extract.hpp"
 
 namespace tracing {
+namespace {
 opentracing::expected<std::unique_ptr<opentracing::SpanContext>>
 extract(const void* data, size_t byte_count) {
   std::string buf(static_cast<const char*>(data), byte_count);
@@ -14,7 +15,6 @@ extract(const void* data, size_t byte_count) {
   return opentracing::Tracer::Global()->Extract(iss);
 }
 
-namespace {
 template <class T>
 tl::expected<std::unique_ptr<opentracing::SpanContext>, util::error>
 extract_impl(const T& x) {
