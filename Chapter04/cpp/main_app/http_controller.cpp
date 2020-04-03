@@ -24,7 +24,11 @@ send_request(const opentracing::SpanContext* ctx,
   span->SetTag("span.kind", "client");
   span->SetTag("http.url", host + path);
   span->SetTag("http.method", http_request->getMethodString());
-  span->SetTag("request.body", http_request->getBody().data());
+
+  const char* const body_data = http_request->bodyData();
+  const size_t body_length = http_request->bodyLength();
+  const std::string buf(body_data, body_length);
+  span->SetTag("request.body", buf);
 
   tracing::inject(*http_request, span->context());
 
