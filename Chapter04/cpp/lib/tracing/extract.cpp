@@ -1,6 +1,8 @@
 #include <sstream>
 #include <string>
 
+#include <pl/unhexify.hpp>
+
 #include "tracing/extract.hpp"
 
 namespace tracing {
@@ -14,13 +16,13 @@ extract(const void* data, size_t byte_count) {
 
 tl::expected<std::unique_ptr<opentracing::SpanContext>, util::error>
 extract(const drogon::HttpRequest& http_request) {
-  const std::string& header_value
+  const std::string& header_value_hex_string
     = http_request.getHeader("OPENTRACING_SPAN_CONTEXT");
 
-  // TODO: HERE
+  const std::vector<pl::byte> data(pl::unhexify(header_value_hex_string, 0));
 
   opentracing::expected<std::unique_ptr<opentracing::SpanContext>> exp(
-    extract(header_value.data(), header_value.size()));
+    extract(data.data(), data.size()));
 
   if (!exp.has_value()) {
     std::ostringstream oss;

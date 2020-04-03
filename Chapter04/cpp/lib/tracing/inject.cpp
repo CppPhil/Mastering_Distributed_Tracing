@@ -1,5 +1,7 @@
 #include <sstream>
 
+#include <pl/hexify.hpp>
+
 #include "tracing/inject.hpp"
 
 namespace tracing {
@@ -30,8 +32,10 @@ tl::expected<void, util::error> inject(drogon::HttpResponse& http_response,
     return tl::make_unexpected(exp.error());
   }
 
-  // TODO: HERE
-  http_response.addHeader("OPENTRACING_SPAN_CONTEXT", *std::move(exp));
+  const std::string& bytes = *exp;
+
+  http_response.addHeader("OPENTRACING_SPAN_CONTEXT",
+                          pl::hexify(bytes.data(), bytes.size(), ""));
   return {};
 }
 } // namespace tracing
