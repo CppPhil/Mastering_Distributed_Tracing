@@ -6,8 +6,7 @@
 #include "tracing/extract.hpp"
 
 namespace e5 {
-http_controller::http_controller() {
-}
+http_controller::http_controller() = default;
 
 void http_controller::handle_say_hello(
   const drogon::HttpRequestPtr& req,
